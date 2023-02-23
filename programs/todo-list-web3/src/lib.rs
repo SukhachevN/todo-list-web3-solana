@@ -1,15 +1,18 @@
 use anchor_lang::prelude::*;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+pub mod instructions;
+pub mod state;
+
+use instructions::*;
+use state::*;
+
+declare_id!("B8qjnebLoHkHHkMJaBhNeTLWRjw7LsbGHncYoqnn6EuT");
 
 #[program]
 pub mod todo_list_web3 {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        Ok(())
+    pub fn create_todo(ctx: Context<CreateTodo>, params: CreateTodoParams) -> Result<()> {
+        CreateTodo::process_instruction(ctx, params)
     }
 }
-
-#[derive(Accounts)]
-pub struct Initialize {}
