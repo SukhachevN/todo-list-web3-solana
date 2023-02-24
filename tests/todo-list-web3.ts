@@ -14,7 +14,9 @@ describe('todo-list-web3', () => {
 
     const user = anchor.web3.Keypair.generate();
 
-    const { todoPda, counterPda } = getPdas(user, program);
+    const todoTitle = 'my first todo';
+
+    const { todoPda, counterPda } = getPdas(user, program, todoTitle);
 
     before(async () => {
         try {
@@ -29,7 +31,7 @@ describe('todo-list-web3', () => {
 
     it('create todo', async () => {
         const todo = {
-            title: 'testCreate',
+            title: todoTitle,
             description: 'testCreate',
             deadline: new anchor.BN(Date.now()),
         };
@@ -68,7 +70,7 @@ describe('todo-list-web3', () => {
 
     it('update todo', async () => {
         const updatedTodo = {
-            title: 'testUpdate',
+            title: todoTitle,
             description: 'testUpdate',
             deadline: new anchor.BN(Date.now()),
             isCompleted: true,
@@ -90,7 +92,7 @@ describe('todo-list-web3', () => {
             counterPda
         );
 
-        expect(todoAccount.title === updatedTodo.title);
+        expect(todoAccount.title !== updatedTodo.title);
         expect(todoAccount.description === updatedTodo.description);
         expect(todoAccount.deadline === updatedTodo.deadline);
         expect(todoAccount.isCompleted === updatedTodo.isCompleted);
