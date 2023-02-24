@@ -8,6 +8,7 @@ pub struct TodoCounterState {
 
 #[account]
 pub struct TodoState {
+    pub user: Pubkey,        // 32
     pub title: String,       // 4 + len()
     pub description: String, // 4 + len()
     pub deadline: i64,       // 8
