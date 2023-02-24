@@ -2,13 +2,13 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-todo_list_web3 = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+todo_list_web3 = "DazSNC93k3B6fUxxg5rhzoyP6owpGhzkjWpucdMQBWTU"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "devnet"
 wallet = "/Users/nikitayeubinh/.config/solana/id.json"
 
 [scripts]
