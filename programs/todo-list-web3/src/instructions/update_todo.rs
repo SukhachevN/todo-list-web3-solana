@@ -7,7 +7,7 @@ pub struct UpdateTodo<'info> {
     pub user: Signer<'info>,
     #[account(
         mut, 
-        seeds=[user.key().as_ref()], 
+        seeds=[user.key().as_ref(), params.title.as_ref()], 
         bump, 
         realloc = 32 + 4 + params.title.len() + 4 + params.description.len() + 8 + 1 + 8 + 8 + 8,
         realloc::payer=user, 
@@ -45,7 +45,6 @@ impl UpdateTodo<'_> {
             todo.complete_date = 0;
         }
 
-        todo.title = params.title;
         todo.description = params.description;
         todo.deadline = params.deadline;
 
