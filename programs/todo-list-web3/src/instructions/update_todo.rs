@@ -7,7 +7,7 @@ pub struct UpdateTodo<'info> {
     pub user: Signer<'info>,
     #[account(
         mut, 
-        seeds=[user.key().as_ref(), params.title.as_ref()], 
+        seeds=[params.title.as_ref(), user.key().as_ref()], 
         bump, 
         realloc = 32 + 4 + params.title.len() + 4 + params.description.len() + 8 + 1 + 8 + 8 + 8,
         realloc::payer=user, 

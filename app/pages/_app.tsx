@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app';
 import WalletContextProvider from '@/components/WalletContextProvider';
 
 import { theme } from '@/styles/theme';
-import { WorkspaceProvider } from '@/components/WorkSpaceProvider';
+import { WorkspaceProvider } from '@/components/WorkspaceProvider';
 
 const App = ({ Component, pageProps }: AppProps) => (
     <ChakraProvider theme={theme}>

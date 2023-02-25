@@ -1,10 +1,11 @@
-import { PROGRAM_ID } from '@/utils/constants';
-import mockWallet from '@/utils/mockWallet';
-import { IDL, TodoListWeb3 } from '@/utils/todo_list_web3';
 import { AnchorProvider, Program, setProvider } from '@project-serum/anchor';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 import { Connection } from '@solana/web3.js';
 import { createContext, useContext } from 'react';
+
+import { PROGRAM_ID } from '@/utils/constants';
+import mockWallet from '@/utils/mockWallet';
+import { IDL, TodoListWeb3 } from '@/utils/todo_list_web3';
 
 const WorkspaceContext = createContext({});
 
