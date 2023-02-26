@@ -3,11 +3,9 @@ import { Box, Spacer } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 import NavBar from './Navbar';
 
-import styles from '@/styles/Home.module.css';
-
 const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
     return (
-        <div className={styles.container}>
+        <Box>
             <Head>
                 <title>Todo list web3</title>
                 <meta name="Todo list on solana blockchain" />
@@ -18,7 +16,7 @@ const MainLayout: FC<{ children: ReactNode }> = ({ children }) => {
                 <Spacer />
                 <Box h="calc(100% - 48px)">{children}</Box>
             </Box>
-        </div>
+        </Box>
     );
 };
 

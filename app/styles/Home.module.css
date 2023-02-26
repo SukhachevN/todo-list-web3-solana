@@ -1,6 +1,3 @@
-.container {
-    background: #1f1f1f;
-}
 .wallet-adapter-button-trigger:not([disabled]) {
     background-color: #9945ff;
     transition: 200ms;

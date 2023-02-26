@@ -11,6 +11,8 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    Switch,
+    Text,
     Textarea,
     VStack,
 } from '@chakra-ui/react';
@@ -21,10 +23,12 @@ import { FC, FormEvent } from 'react';
 import { useWorkspace } from './WorkspaceProvider';
 
 export type TodoType = {
-    user: BN;
+    user: web3.PublicKey;
     title: string;
     description: string;
     deadline: BN;
+    completeDate: BN;
+    isCompleted: boolean;
 };
 
 export type TodoModalType = {
@@ -37,6 +41,7 @@ type FormTargetType = EventTarget & {
     title: { value: string };
     description: { value: string };
     deadline: { value: string };
+    isCompleted: { checked: boolean };
 };
 
 const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
@@ -51,7 +56,8 @@ const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
             return;
         }
 
-        const { title, description, deadline } = event.target as FormTargetType;
+        const { title, description, deadline, isCompleted } =
+            event.target as FormTargetType;
 
         const deadlineDate = deadline ? new Date(deadline.value).getTime() : 0;
 
@@ -74,7 +80,12 @@ const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
         const transaction = new web3.Transaction();
 
         if (todo) {
-            // TODO
+            const instruction = await program.methods
+                .updateTodo({ ...newTodo, isCompleted: isCompleted.checked })
+                .accounts({ todo: todoPda, counter: counterPda })
+                .transaction();
+
+            transaction.add(instruction);
         } else {
             const instruction = await program.methods
                 .createTodo(newTodo)
@@ -86,9 +97,9 @@ const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
 
         try {
             const tx = await sendTransaction(transaction, connection);
-            console.log(
-                `Transaction submitted: https://explorer.solana.com/tx/${tx}?cluster=devnet`
-            );
+            // console.log(
+            //     `Transaction submitted: https://explorer.solana.com/tx/${tx}?cluster=devnet`
+            // );
         } catch {}
     };
 
@@ -96,16 +107,21 @@ const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent as="form" onSubmit={onSubmit}>
-                <ModalHeader>{todo ? 'Edit todo' : 'Create todo'}</ModalHeader>
+                <ModalHeader>
+                    <Text variant="with-gradient">
+                        {todo ? 'Edit todo' : 'Create todo'}
+                    </Text>
+                </ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <VStack>
+                    <VStack spacing="10px">
                         <FormControl isRequired>
                             <FormLabel>Title:</FormLabel>
                             <Input
                                 type="text"
                                 name="title"
                                 placeholder="Todo title"
+                                defaultValue={todo?.title}
                             />
                             <FormHelperText>
                                 Give to your todo unique title.
@@ -113,7 +129,25 @@ const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
                         </FormControl>
                         <FormControl>
                             <FormLabel>Deadline:</FormLabel>
-                            <Input type="date" name="deadline" />
+                            <Input
+                                type="date"
+                                name="deadline"
+                                defaultValue={
+                                    todo?.deadline &&
+                                    new Date(
+                                        todo.deadline.toNumber()
+                                    ).toLocaleDateString()
+                                }
+                            />
+                        </FormControl>
+                        <FormControl
+                            display="flex"
+                            alignItems="center"
+                            isDisabled={!todo}
+                            defaultChecked={todo?.isCompleted}
+                        >
+                            <FormLabel mb={0}>Completed:</FormLabel>
+                            <Switch name="isCompleted" />
                         </FormControl>
                         <FormControl>
                             <FormLabel>Description:</FormLabel>
@@ -121,12 +155,15 @@ const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
                                 name="description"
                                 resize="none"
                                 placeholder="description"
+                                defaultValue={todo?.description}
                             />
                         </FormControl>
                     </VStack>
                 </ModalBody>
                 <ModalFooter>
-                    <Button type="submit">{todo ? 'Save' : 'Create'}</Button>
+                    <Button type="submit" variant="with-gradient">
+                        {todo ? 'Save' : 'Create'}
+                    </Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>
