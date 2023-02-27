@@ -75,7 +75,7 @@ const TodoCard: FC<TodoCardType> = ({ todo }) => {
                             aria-label="edit todo"
                             icon={<EditIcon />}
                             size="sm"
-                            variant="with-gradient"
+                            variant="with-gradient-primary"
                             onClick={onOpenTodoModal}
                         />
                     </Heading>
@@ -127,7 +127,7 @@ const TodoCard: FC<TodoCardType> = ({ todo }) => {
                         isOpen={isInfoModalOpen}
                         title={todo.title}
                         description={todo.description}
-                        createDate={todo.completeDate}
+                        createDate={todo.createDate}
                         onClose={onCloseInfoModal}
                     />
                     <TodoModal

@@ -42,7 +42,7 @@ impl CreateTodo<'_> {
         todo.description = params.description;
         todo.deadline = params.deadline;
         todo.is_completed = false;
-        todo.create_date = clock.unix_timestamp;
+        todo.create_date = clock.unix_timestamp * 1000;
 
         let stats = &mut ctx.accounts.stats;
 

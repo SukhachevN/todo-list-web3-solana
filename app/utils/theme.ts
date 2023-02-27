@@ -49,27 +49,27 @@ export const theme = extendTheme({
         Button: {
             variants: {
                 default: {
-                    bg: 'purple.main',
-                    _hover: {
-                        bg: 'purple.hover',
-                    },
+                    bgGradient: ['linear(to-l,  #6c29bf, #8d5ec6)'],
                     _focusVisible: {
-                        boxShadow: '0 0 0 1px purple.hover',
+                        boxShadow: 'none',
+                    },
+                    _hover: {
+                        transform: 'scale(1.02)',
                     },
                 },
-                'with-gradient': {
+                'with-gradient-primary': {
                     bgGradient: 'linear(to-l, purple.main, green.main)',
                     _focusVisible: {
                         boxShadow: 'none',
+                    },
+                    _hover: {
+                        transform: 'scale(1.02)',
                     },
                 },
             },
             defaultProps: {
                 variant: 'default',
                 color: 'white',
-                _hover: {
-                    transform: 'scale(1.02)',
-                },
             },
         },
         Text: {
@@ -145,8 +145,8 @@ export const theme = extendTheme({
                     container: {
                         bg: mode('white', 'arsenic')(props),
                         _hover: {
-                            transform: 'scale(1.02)',
-                            border: '1px solid',
+                            transform: 'scale(1.01)',
+                            borderBottom: '1px solid',
                             borderColor: mode(
                                 'purple.main',
                                 'green.main'

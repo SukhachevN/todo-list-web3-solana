@@ -73,24 +73,26 @@ const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
             program.programId
         );
 
-        const [counterPda] = web3.PublicKey.findProgramAddressSync(
-            [Buffer.from('counter'), publicKey.toBuffer()],
+        const [statsPda] = web3.PublicKey.findProgramAddressSync(
+            [Buffer.from('stats'), publicKey.toBuffer()],
             program.programId
         );
 
         const transaction = new web3.Transaction();
 
+        const accounts = { todo: todoPda, stats: statsPda };
+
         if (todo) {
             const instruction = await program.methods
                 .updateTodo({ ...newTodo, isCompleted: isCompleted.checked })
-                .accounts({ todo: todoPda, counter: counterPda })
+                .accounts(accounts)
                 .transaction();
 
             transaction.add(instruction);
         } else {
             const instruction = await program.methods
                 .createTodo(newTodo)
-                .accounts({ todo: todoPda, counter: counterPda })
+                .accounts(accounts)
                 .transaction();
 
             transaction.add(instruction);
@@ -161,8 +163,9 @@ const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
                         </FormControl>
                     </VStack>
                 </ModalBody>
-                <ModalFooter>
-                    <Button type="submit" variant="with-gradient">
+                <ModalFooter gap="10px">
+                    {todo && <Button>Delete</Button>}
+                    <Button type="submit" variant="with-gradient-primary">
                         {todo ? 'Save' : 'Create'}
                     </Button>
                 </ModalFooter>

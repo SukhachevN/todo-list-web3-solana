@@ -42,7 +42,7 @@ impl UpdateTodo<'_> {
                 stats.completed += 1;
             }
             
-            todo.complete_date = clock.unix_timestamp;
+            todo.complete_date = clock.unix_timestamp * 1000;
         }
 
         todo.description = params.description;

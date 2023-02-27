@@ -1,8 +1,8 @@
 .wallet-adapter-button-trigger:not([disabled]) {
-    background-color: #9945ff;
+    background-image: linear-gradient(to left, #6c29bf, #8d5ec6);
     transition: 200ms;
 }
 
 .wallet-adapter-button-trigger:not([disabled]):hover {
-    background-color: #a358ff;
+    background-image: linear-gradient(to left, #6c29bf, #8d5ec6);
 }

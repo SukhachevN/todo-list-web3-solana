@@ -10,7 +10,7 @@ import {
     useDisclosure,
     VStack,
 } from '@chakra-ui/react';
-import { BN, web3 } from '@project-serum/anchor';
+import { web3 } from '@project-serum/anchor';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { useEffect, useState } from 'react';
 import TodoCard from './TodoCard';
@@ -91,7 +91,7 @@ const Connected = () => {
                       ))}
             </SimpleGrid>
             {!isLoadingTodos && (
-                <Center gap={10}>
+                <Center gap="10px">
                     <Button>Previous</Button>
                     <Button>Next</Button>
                 </Center>
