@@ -15,12 +15,12 @@ pub struct CreateTodo<'info> {
     pub todo: Account<'info, TodoState>,
     #[account(
         init_if_needed,
-        seeds=["counter".as_bytes().as_ref(), user.key().as_ref()],
+        seeds=["stats".as_bytes().as_ref(), user.key().as_ref()],
         bump,
         payer=user,
-        space=std::mem::size_of::<TodoCounterState>() + 8,
+        space=std::mem::size_of::<StatsState>() + 8,
     )]
-    pub counter: Account<'info, TodoCounterState>,
+    pub stats: Account<'info, StatsState>,
     pub system_program: Program<'info, System>,
 }
 
@@ -44,9 +44,9 @@ impl CreateTodo<'_> {
         todo.is_completed = false;
         todo.create_date = clock.unix_timestamp;
 
-        let todo_counter = &mut ctx.accounts.counter;
+        let stats = &mut ctx.accounts.stats;
 
-        todo_counter.total += 1;
+        stats.created += 1;
 
         Ok(())
     }

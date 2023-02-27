@@ -8,22 +8,17 @@ pub struct DeleteTodo<'info> {
     todo: Account<'info, TodoState>,
     #[account(
         mut,
-        seeds=["counter".as_bytes().as_ref(), user.key().as_ref()],
+        seeds=["stats".as_bytes().as_ref(), user.key().as_ref()],
         bump,
     )]
-    pub counter: Account<'info, TodoCounterState>,
+    pub stats: Account<'info, StatsState>,
 }
 
 impl DeleteTodo<'_> {
     pub fn process_instruction(ctx: Context<DeleteTodo>) -> Result<()> {
-        let todo = &ctx.accounts.todo;
-        let counter = &mut ctx.accounts.counter;
+        let stats = &mut ctx.accounts.stats;
 
-        if todo.is_completed {
-            counter.completed -= 1;
-        }
-
-        counter.total -= 1;
+        stats.deleted += 1;
 
         Ok(())
     }

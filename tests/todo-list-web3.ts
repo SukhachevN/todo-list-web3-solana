@@ -16,7 +16,7 @@ describe('todo-list-web3', () => {
 
     const todoTitle = 'my first todo';
 
-    const { todoPda, counterPda } = getPdas(user, program, todoTitle);
+    const { todoPda, statsPda } = getPdas(user, program, todoTitle);
 
     before(async () => {
         try {
@@ -41,7 +41,7 @@ describe('todo-list-web3', () => {
             .accounts({
                 user: user.publicKey,
                 todo: todoPda,
-                counter: counterPda,
+                stats: statsPda,
             })
             .signers([user])
             .rpc();
@@ -50,9 +50,7 @@ describe('todo-list-web3', () => {
 
         const todosAccounts = await getTodosAccounts(user, program);
 
-        const counterAccount = await program.account.todoCounterState.fetch(
-            counterPda
-        );
+        const statsAccount = await program.account.statsState.fetch(statsPda);
 
         expect(todosAccounts.length === 1);
 
@@ -62,8 +60,7 @@ describe('todo-list-web3', () => {
         expect(!todoAccount.isCompleted);
         expect(!todoAccount.completeDate);
 
-        expect(counterAccount.total.toNumber() === 1);
-        expect(!counterAccount.completed.toNumber());
+        expect(statsAccount.created.toNumber() === 1);
 
         console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
     });
@@ -81,16 +78,14 @@ describe('todo-list-web3', () => {
             .accounts({
                 user: user.publicKey,
                 todo: todoPda,
-                counter: counterPda,
+                stats: statsPda,
             })
             .signers([user])
             .rpc();
 
         const todoAccount = await program.account.todoState.fetch(todoPda);
 
-        const counterAccount = await program.account.todoCounterState.fetch(
-            counterPda
-        );
+        const statsAccount = await program.account.statsState.fetch(statsPda);
 
         expect(todoAccount.title !== updatedTodo.title);
         expect(todoAccount.description === updatedTodo.description);
@@ -98,8 +93,7 @@ describe('todo-list-web3', () => {
         expect(todoAccount.isCompleted === updatedTodo.isCompleted);
         expect(todoAccount.completeDate);
 
-        expect(counterAccount.total.toNumber() === 1);
-        expect(counterAccount.completed.toNumber());
+        expect(statsAccount.completed.toNumber() === 1);
 
         console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
     });
@@ -110,19 +104,16 @@ describe('todo-list-web3', () => {
             .accounts({
                 user: user.publicKey,
                 todo: todoPda,
-                counter: counterPda,
+                stats: statsPda,
             })
             .signers([user])
             .rpc();
 
-        const counterAccount = await program.account.todoCounterState.fetch(
-            counterPda
-        );
+        const statsAccount = await program.account.statsState.fetch(statsPda);
 
         const todosAccounts = await getTodosAccounts(user, program);
 
-        expect(!counterAccount.total.toNumber());
-        expect(!counterAccount.completed.toNumber());
+        expect(statsAccount.deleted.toNumber() === 1);
 
         expect(!todosAccounts.length);
 

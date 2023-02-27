@@ -16,7 +16,7 @@
           "isSigner": false
         },
         {
-          "name": "counter",
+          "name": "stats",
           "isMut": true,
           "isSigner": false
         },
@@ -49,7 +49,7 @@
           "isSigner": false
         },
         {
-          "name": "counter",
+          "name": "stats",
           "isMut": true,
           "isSigner": false
         },
@@ -82,7 +82,7 @@
           "isSigner": false
         },
         {
-          "name": "counter",
+          "name": "stats",
           "isMut": true,
           "isSigner": false
         }
@@ -92,16 +92,20 @@
   ],
   "accounts": [
     {
-      "name": "TodoCounterState",
+      "name": "StatsState",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "total",
+            "name": "created",
             "type": "u64"
           },
           {
             "name": "completed",
+            "type": "u64"
+          },
+          {
+            "name": "deleted",
             "type": "u64"
           }
         ]
@@ -191,6 +195,6 @@
     }
   ],
   "metadata": {
-    "address": "DazSNC93k3B6fUxxg5rhzoyP6owpGhzkjWpucdMQBWTU"
+    "address": "HzCzKDJ3gadVz1BGNgryn2GVae5z76XgH1DuKikXE7sM"
   }
 }

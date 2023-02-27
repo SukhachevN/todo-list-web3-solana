@@ -16,7 +16,7 @@ export type TodoListWeb3 = {
           "isSigner": false
         },
         {
-          "name": "counter",
+          "name": "stats",
           "isMut": true,
           "isSigner": false
         },
@@ -49,7 +49,7 @@ export type TodoListWeb3 = {
           "isSigner": false
         },
         {
-          "name": "counter",
+          "name": "stats",
           "isMut": true,
           "isSigner": false
         },
@@ -82,7 +82,7 @@ export type TodoListWeb3 = {
           "isSigner": false
         },
         {
-          "name": "counter",
+          "name": "stats",
           "isMut": true,
           "isSigner": false
         }
@@ -92,16 +92,20 @@ export type TodoListWeb3 = {
   ],
   "accounts": [
     {
-      "name": "todoCounterState",
+      "name": "statsState",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "total",
+            "name": "created",
             "type": "u64"
           },
           {
             "name": "completed",
+            "type": "u64"
+          },
+          {
+            "name": "deleted",
             "type": "u64"
           }
         ]
@@ -210,7 +214,7 @@ export const IDL: TodoListWeb3 = {
           "isSigner": false
         },
         {
-          "name": "counter",
+          "name": "stats",
           "isMut": true,
           "isSigner": false
         },
@@ -243,7 +247,7 @@ export const IDL: TodoListWeb3 = {
           "isSigner": false
         },
         {
-          "name": "counter",
+          "name": "stats",
           "isMut": true,
           "isSigner": false
         },
@@ -276,7 +280,7 @@ export const IDL: TodoListWeb3 = {
           "isSigner": false
         },
         {
-          "name": "counter",
+          "name": "stats",
           "isMut": true,
           "isSigner": false
         }
@@ -286,16 +290,20 @@ export const IDL: TodoListWeb3 = {
   ],
   "accounts": [
     {
-      "name": "todoCounterState",
+      "name": "statsState",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "total",
+            "name": "created",
             "type": "u64"
           },
           {
             "name": "completed",
+            "type": "u64"
+          },
+          {
+            "name": "deleted",
             "type": "u64"
           }
         ]

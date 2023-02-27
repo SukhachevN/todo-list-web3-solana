@@ -1,9 +1,10 @@
 use crate::*;
 
 #[account]
-pub struct TodoCounterState {
-    pub total: u64,     // 8
+pub struct StatsState {
+    pub created: u64,   // 8
     pub completed: u64, // 8
+    pub deleted: u64,   // 8
 }
 
 #[account]

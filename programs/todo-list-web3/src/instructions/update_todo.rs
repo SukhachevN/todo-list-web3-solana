@@ -16,10 +16,10 @@ pub struct UpdateTodo<'info> {
     pub todo: Account<'info, TodoState>,
     #[account(
         mut,
-        seeds=["counter".as_bytes().as_ref(), user.key().as_ref()],
+        seeds=["stats".as_bytes().as_ref(), user.key().as_ref()],
         bump,
     )]
-    pub counter: Account<'info, TodoCounterState>,
+    pub stats: Account<'info, StatsState>,
     pub system_program: Program<'info, System>,
 }
 
@@ -35,14 +35,14 @@ impl UpdateTodo<'_> {
     pub fn process_instruction(ctx: Context<UpdateTodo>, params: UpdateTodoParams) -> Result<()> {
         let clock = Clock::get()?;
         let todo = &mut ctx.accounts.todo;
-        let counter = &mut ctx.accounts.counter;
+        let stats = &mut ctx.accounts.stats;
 
-        if !todo.is_completed && params.is_completed {
-            counter.completed += 1;
+        if params.is_completed {
+            if todo.complete_date == 0 {
+                stats.completed += 1;
+            }
+            
             todo.complete_date = clock.unix_timestamp;
-        } else if todo.is_completed && !params.is_completed {
-            counter.completed -= 1;
-            todo.complete_date = 0;
         }
 
         todo.description = params.description;

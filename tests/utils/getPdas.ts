@@ -11,10 +11,10 @@ export const getPdas = (
         program.programId
     );
 
-    const [counterPda] = web3.PublicKey.findProgramAddressSync(
-        [Buffer.from('counter'), user.publicKey.toBuffer()],
+    const [statsPda] = web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('stats'), user.publicKey.toBuffer()],
         program.programId
     );
 
-    return { todoPda, counterPda };
+    return { todoPda, statsPda };
 };

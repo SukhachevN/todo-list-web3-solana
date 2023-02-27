@@ -29,6 +29,7 @@ export type TodoType = {
     deadline: BN;
     completeDate: BN;
     isCompleted: boolean;
+    createDate: BN;
 };
 
 export type TodoModalType = {

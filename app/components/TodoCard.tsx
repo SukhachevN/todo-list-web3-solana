@@ -18,7 +18,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import { FC } from 'react';
-import TodoInfoModal from './TodoDescriptionModal';
+import TodoInfoModal from './TodoInfoModal';
 import TodoModal, { TodoType } from './TodoModal';
 
 type TodoCardType = {
@@ -127,6 +127,7 @@ const TodoCard: FC<TodoCardType> = ({ todo }) => {
                         isOpen={isInfoModalOpen}
                         title={todo.title}
                         description={todo.description}
+                        createDate={todo.completeDate}
                         onClose={onCloseInfoModal}
                     />
                     <TodoModal

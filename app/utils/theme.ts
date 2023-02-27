@@ -53,9 +53,15 @@ export const theme = extendTheme({
                     _hover: {
                         bg: 'purple.hover',
                     },
+                    _focusVisible: {
+                        boxShadow: '0 0 0 1px purple.hover',
+                    },
                 },
                 'with-gradient': {
                     bgGradient: 'linear(to-l, purple.main, green.main)',
+                    _focusVisible: {
+                        boxShadow: 'none',
+                    },
                 },
             },
             defaultProps: {
@@ -158,6 +164,11 @@ export const theme = extendTheme({
                 default: (props: StyleOptions) => ({
                     dialog: {
                         bg: mode('white', 'arsenic')(props),
+                    },
+                    closeButton: {
+                        _focusVisible: {
+                            boxShadow: 'none',
+                        },
                     },
                 }),
             },
