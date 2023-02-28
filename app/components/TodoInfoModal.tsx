@@ -32,7 +32,7 @@ const TodoInfoModal: FC<TodoInfoModalType> = ({
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent height="50%">
+            <ModalContent height="484px">
                 <ModalHeader>
                     <Text variant="with-gradient" noOfLines={2} title={title}>
                         {title}

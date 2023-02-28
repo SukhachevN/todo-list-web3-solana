@@ -56,14 +56,9 @@ export const theme = extendTheme({
                     _hover: {
                         transform: 'scale(1.02)',
                     },
-                },
-                'with-gradient-primary': {
-                    bgGradient: 'linear(to-l, purple.main, green.main)',
-                    _focusVisible: {
-                        boxShadow: 'none',
-                    },
-                    _hover: {
-                        transform: 'scale(1.02)',
+                    '&:hover[disabled]': {
+                        bgGradient: ['linear(to-l,  #6c29bf, #8d5ec6)'],
+                        transform: 'none',
                     },
                 },
             },
@@ -108,16 +103,16 @@ export const theme = extendTheme({
         },
         Switch: {
             variants: {
-                default: (props: StyleOptions) => ({
+                default: {
                     track: {
                         _checked: {
-                            bg: mode('purple.main', 'green.main')(props),
+                            bg: 'purple.main',
                         },
                         _focusVisible: {
                             boxShadow: 'none',
                         },
                     },
-                }),
+                },
             },
             defaultProps: {
                 variant: 'default',

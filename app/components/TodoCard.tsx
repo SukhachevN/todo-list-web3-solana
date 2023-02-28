@@ -75,7 +75,6 @@ const TodoCard: FC<TodoCardType> = ({ todo }) => {
                             aria-label="edit todo"
                             icon={<EditIcon />}
                             size="sm"
-                            variant="with-gradient-primary"
                             onClick={onOpenTodoModal}
                         />
                     </Heading>
