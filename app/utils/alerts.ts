@@ -26,10 +26,20 @@ export const getUpdateTodoAlert = (title: string) => ({
 
 export const getCreateTodoErrorAlert = (title: string, error: string) => ({
     ...errorAlertBase,
-    description: `Todo "${title}" was not created.\n${error}`,
+    description: `Todo "${title}" was not created. ${error}`,
 });
 
 export const getUpdateTodoErrorAlert = (title: string, error: string) => ({
     ...errorAlertBase,
-    description: `Todo "${title}" was not updated.\n${error}`,
+    description: `Todo "${title}" was not updated. ${error}`,
+});
+
+export const getDeleteTodoAlert = (title: string) => ({
+    ...successAlertBase,
+    description: `Todo "${title}" successfully deleted`,
+});
+
+export const getDeleteTodoErrorAlert = (title: string, error: string) => ({
+    ...errorAlertBase,
+    description: `Todo "${title}" was not deleted. ${error}`,
 });

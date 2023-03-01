@@ -47,6 +47,7 @@ impl UpdateTodo<'_> {
 
         todo.description = params.description;
         todo.deadline = params.deadline;
+        todo.is_completed = params.is_completed;
 
         Ok(())
     }

@@ -1,4 +1,3 @@
-import { TodoStateType, TodoType } from '@/components/TodoModal';
 import { BN, Program, web3 } from '@project-serum/anchor';
 import { TodoListWeb3 } from '../todo_list_web3';
 
@@ -10,20 +9,25 @@ import {
     getUpdateTodoAlert,
     getUpdateTodoErrorAlert,
 } from '../alerts';
+import { TodoAccountType, TodoStateType, TodoType } from '../types';
+import { Dispatch, SetStateAction } from 'react';
 
-type HandleCreateUpdateTodoArgs = {
+export type HandleCreateUpdateTodoArgs = {
+    index: number;
     toast: CreateToastFnReturn;
-    connection: web3.Connection;
+    connection?: web3.Connection;
     todo: TodoType | null;
     todoState: TodoStateType;
     publicKey: web3.PublicKey | null;
     program?: Program<TodoListWeb3>;
     setIsUpdating: (value: boolean) => void;
     sendTransaction: WalletAdapterProps['sendTransaction'];
-    onClose: () => void;
+    onClose?: () => void;
+    setTodos: Dispatch<SetStateAction<TodoAccountType[]>>;
 };
 
 export const handleCreateUpdateTodo = async ({
+    index,
     toast,
     connection,
     todo,
@@ -33,12 +37,13 @@ export const handleCreateUpdateTodo = async ({
     setIsUpdating,
     sendTransaction,
     onClose,
+    setTodos,
 }: HandleCreateUpdateTodoArgs) => {
-    setIsUpdating(true);
-
-    if (!publicKey || !program) {
+    if (!publicKey || !program || !connection) {
         return;
     }
+
+    setIsUpdating(true);
 
     const { title, description, deadline, isCompleted } = todoState;
 
@@ -88,14 +93,50 @@ export const handleCreateUpdateTodo = async ({
 
         toast(alert);
 
-        onClose();
+        if (todo) {
+            setTodos((todos) => {
+                const todo = todos[index].account;
+
+                todo.isCompleted = isCompleted;
+                todo.description = description;
+                todo.deadline = newTodo.deadline;
+
+                if (isCompleted) {
+                    todo.completeDate = new BN(Date.now());
+                }
+
+                return todos;
+            });
+        } else {
+            setTodos((todos) => {
+                const todo: TodoAccountType = {
+                    account: {
+                        ...newTodo,
+                        user: publicKey,
+                        isCompleted: false,
+                        completeDate: new BN(0),
+                        createDate: new BN(Date.now()),
+                    },
+                    publicKey: todoPda,
+                };
+
+                todos.unshift(todo);
+
+                return todos;
+            });
+        }
+
+        onClose?.();
     } catch (error) {
         if (error instanceof Error) {
-            const message = error.message;
+            const { message } = error;
+
             const alertFunction = todo
                 ? getUpdateTodoErrorAlert
                 : getCreateTodoErrorAlert;
+
             const alert = alertFunction(title, message);
+
             toast(alert);
         }
     } finally {

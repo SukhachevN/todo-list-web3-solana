@@ -1,5 +1,5 @@
-import { TodoType } from '@/components/TodoModal';
 import BN from 'bn.js';
+import { TodoType } from './types';
 
 export const formatDateToInput = (date: Date) => {
     const year = date.getFullYear();

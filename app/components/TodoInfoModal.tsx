@@ -1,3 +1,4 @@
+import { TodoInfoModalType } from '@/utils/types';
 import {
     Divider,
     Modal,
@@ -11,14 +12,6 @@ import {
 } from '@chakra-ui/react';
 import { BN } from '@project-serum/anchor';
 import { FC } from 'react';
-
-type TodoInfoModalType = {
-    isOpen: boolean;
-    title: string;
-    description: string;
-    createDate: BN;
-    onClose: () => void;
-};
 
 const TodoInfoModal: FC<TodoInfoModalType> = ({
     isOpen,

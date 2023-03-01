@@ -171,5 +171,16 @@ export const theme = extendTheme({
                 variant: 'default',
             },
         },
+        Spinner: {
+            variants: {
+                default: {
+                    size: 'lg',
+                    color: 'purple.main',
+                },
+            },
+            defaultProps: {
+                variant: 'default',
+            },
+        },
     },
 });

@@ -1,10 +1,7 @@
-import {
-    formatDateToInput,
-    getDateFromTodo,
-    maxDate,
-    minDate,
-} from '@/utils/dateUtils';
+import { getDateFromTodo, maxDate, minDate } from '@/utils/dateUtils';
 import { handleCreateUpdateTodo } from '@/utils/handlers/handleCreateUpdateTodo';
+import { handleDeleteTodo } from '@/utils/handlers/handleDeleteTodo';
+import { TodoModalType, TodoStateType } from '@/utils/types';
 import {
     Button,
     Center,
@@ -26,41 +23,22 @@ import {
     useToast,
     VStack,
 } from '@chakra-ui/react';
-import { web3 } from '@project-serum/anchor';
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import BN from 'bn.js';
+
+import { useWallet } from '@solana/wallet-adapter-react';
+
 import { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
 import { useWorkspace } from './WorkspaceProvider';
 
-export type TodoType = {
-    user: web3.PublicKey;
-    title: string;
-    description: string;
-    deadline: BN;
-    completeDate: BN;
-    isCompleted: boolean;
-    createDate: BN;
-};
-
-export type TodoModalType = {
-    todo: TodoType | null;
-    isOpen: boolean;
-    onClose: () => void;
-};
-
-export type TodoStateType = {
-    title: string;
-    description: string;
-    isCompleted: boolean;
-    deadline: string;
-};
-
-const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
+const TodoModal: FC<TodoModalType> = ({
+    isOpen,
+    onClose,
+    todo,
+    setTodos,
+    index,
+}) => {
     const { publicKey, sendTransaction } = useWallet();
 
-    const { connection } = useConnection();
-
-    const { program } = useWorkspace();
+    const { program, connection } = useWorkspace();
 
     const [isUpdating, setIsUpdating] = useState(false);
 
@@ -83,6 +61,7 @@ const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
         event.preventDefault();
 
         handleCreateUpdateTodo({
+            index,
             toast,
             connection,
             todo,
@@ -92,10 +71,24 @@ const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
             setIsUpdating,
             sendTransaction,
             onClose,
+            setTodos,
         });
     };
 
-    const onDelete = async () => {};
+    const onDelete = async () => {
+        handleDeleteTodo({
+            index,
+            toast,
+            connection,
+            todo,
+            program,
+            publicKey,
+            setIsUpdating,
+            sendTransaction,
+            onClose,
+            setTodos,
+        });
+    };
 
     const onChange = ({
         target,
@@ -123,7 +116,7 @@ const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
             <ModalContent as="form" onSubmit={onSubmit} h="484px">
                 {isUpdating ? (
                     <Center h="100%">
-                        <Spinner size="lg" color="purple.main" />
+                        <Spinner />
                     </Center>
                 ) : (
                     <>
@@ -168,7 +161,7 @@ const TodoModal: FC<TodoModalType> = ({ isOpen, onClose, todo }) => {
                                     <FormLabel mb={0}>Completed:</FormLabel>
                                     <Switch
                                         name="isCompleted"
-                                        checked={todoState.isCompleted}
+                                        isChecked={todoState.isCompleted}
                                         onChange={onChange}
                                     />
                                 </FormControl>

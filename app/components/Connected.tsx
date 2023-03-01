@@ -1,41 +1,39 @@
 import { emptyArray } from '@/utils/constants';
+import { CurrentTodoStateType, TodoAccountType, TodoType } from '@/utils/types';
 import { AddIcon } from '@chakra-ui/icons';
 import {
-    Box,
-    Button,
     Center,
     HStack,
     IconButton,
     SimpleGrid,
     useDisclosure,
     VStack,
+    Text,
 } from '@chakra-ui/react';
-import { web3 } from '@project-serum/anchor';
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useEffect, useState } from 'react';
+import { useImmer } from 'use-immer';
 import TodoCard from './TodoCard';
-import TodoModal, { TodoType } from './TodoModal';
+import TodoModal from './TodoModal';
 import { useWorkspace } from './WorkspaceProvider';
-
-type TodoAccountType = {
-    account: TodoType;
-    publicKey: web3.PublicKey;
-};
 
 const Connected = () => {
     const { publicKey } = useWallet();
-    const { connection } = useConnection();
+
     const { program } = useWorkspace();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const [todos, setTodos] = useState<TodoAccountType[]>([]);
-    const [currentTodo, setCurrentTodo] = useState<TodoType | null>(null);
+    const [todos, setTodos] = useImmer<TodoAccountType[]>([]);
+    const [currentTodo, setCurrentTodo] = useState<CurrentTodoStateType>({
+        index: 0,
+        todo: null,
+    });
     const [isLoadingTodos, setIsLoadingTodos] = useState(false);
 
     const handleCreateTodo = () => {
         onOpen();
-        setCurrentTodo(null);
+        setCurrentTodo({ index: 0, todo: null });
     };
 
     useEffect(() => {
@@ -51,14 +49,20 @@ const Connected = () => {
                             },
                         },
                     ]);
-                    setTodos(accounts);
+                    setTodos(
+                        accounts.sort(
+                            (a, b) =>
+                                b.account.createDate.toNumber() -
+                                a.account.createDate.toNumber()
+                        )
+                    );
                 } finally {
                     setIsLoadingTodos(false);
                 }
             }
         };
         fetchTodos();
-    }, [publicKey, connection, program]);
+    }, [publicKey, program]);
 
     return (
         <VStack spacing={10} h="100%">
@@ -69,9 +73,11 @@ const Connected = () => {
                     onClick={handleCreateTodo}
                 />
                 <TodoModal
+                    index={currentTodo.index}
                     isOpen={isOpen}
                     onClose={onClose}
-                    todo={currentTodo}
+                    todo={currentTodo.todo}
+                    setTodos={setTodos}
                 />
             </HStack>
             <SimpleGrid
@@ -80,22 +86,31 @@ const Connected = () => {
                 w="100%"
                 overflow="auto"
                 h="100%"
-                minChildWidth="300px"
+                minChildWidth="400px"
             >
                 {isLoadingTodos
                     ? emptyArray.map((_, index) => (
-                          <TodoCard key={index} todo={null} />
+                          <TodoCard
+                              key={index}
+                              index={index}
+                              todo={null}
+                              setTodos={setTodos}
+                          />
                       ))
-                    : todos.map(({ publicKey, account }) => (
-                          <TodoCard key={publicKey.toBase58()} todo={account} />
+                    : todos.map(({ publicKey, account }, index) => (
+                          <TodoCard
+                              index={index}
+                              key={publicKey.toBase58()}
+                              todo={account}
+                              setTodos={setTodos}
+                          />
                       ))}
+                {!isLoadingTodos && !todos.length && (
+                    <Text variant="with-gradient" textAlign="center">
+                        Here you will see your todos
+                    </Text>
+                )}
             </SimpleGrid>
-            {!isLoadingTodos && (
-                <Center gap="10px">
-                    <Button>Previous</Button>
-                    <Button>Next</Button>
-                </Center>
-            )}
         </VStack>
     );
 };

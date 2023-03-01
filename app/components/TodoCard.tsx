@@ -1,3 +1,6 @@
+import { getDateFromTodo } from '@/utils/dateUtils';
+import { handleCreateUpdateTodo } from '@/utils/handlers/handleCreateUpdateTodo';
+import { TodoCardType } from '@/utils/types';
 import { EditIcon } from '@chakra-ui/icons';
 import {
     Box,
@@ -5,6 +8,7 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
+    Center,
     Divider,
     Flex,
     FormControl,
@@ -13,19 +17,19 @@ import {
     HStack,
     IconButton,
     SkeletonText,
+    Spinner,
     Switch,
     Text,
     useDisclosure,
+    useToast,
 } from '@chakra-ui/react';
-import { FC } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { ChangeEvent, FC, memo, useState } from 'react';
 import TodoInfoModal from './TodoInfoModal';
-import TodoModal, { TodoType } from './TodoModal';
+import TodoModal from './TodoModal';
+import { useWorkspace } from './WorkspaceProvider';
 
-type TodoCardType = {
-    todo: TodoType | null;
-};
-
-const TodoCard: FC<TodoCardType> = ({ todo }) => {
+const TodoCard: FC<TodoCardType> = ({ todo, index, setTodos }) => {
     const {
         isOpen: isInfoModalOpen,
         onOpen: onOpenInfoModal,
@@ -37,6 +41,14 @@ const TodoCard: FC<TodoCardType> = ({ todo }) => {
         onOpen: onOpenTodoModal,
         onClose: onCloseTodoModal,
     } = useDisclosure();
+
+    const { publicKey, sendTransaction } = useWallet();
+
+    const { program, connection } = useWorkspace();
+
+    const toast = useToast();
+
+    const [isUpdating, setIsUpdating] = useState(false);
 
     const isShowComplete = todo?.completeDate.toNumber() && todo?.isCompleted;
 
@@ -53,73 +65,115 @@ const TodoCard: FC<TodoCardType> = ({ todo }) => {
               ).toLocaleDateString()
             : '';
 
+    const onChange = ({
+        target: { checked },
+    }: ChangeEvent<HTMLInputElement>) => {
+        if (!todo) return;
+
+        const todoState = {
+            ...todo,
+            deadline: getDateFromTodo(todo),
+            isCompleted: checked,
+        };
+
+        handleCreateUpdateTodo({
+            index,
+            toast,
+            connection,
+            todo,
+            todoState,
+            program,
+            publicKey,
+            sendTransaction,
+            setIsUpdating,
+            setTodos,
+        });
+    };
+
     return (
         <Card h="300px" maxW="500px">
-            <CardHeader>
-                {todo ? (
-                    <Heading
-                        as="h3"
-                        fontSize="xl"
+            {isUpdating ? (
+                <Center h="100%">
+                    <Spinner />
+                </Center>
+            ) : (
+                <>
+                    <CardHeader>
+                        {todo ? (
+                            <Heading
+                                as="h3"
+                                fontSize="xl"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="space-between"
+                            >
+                                <Text
+                                    variant="with-gradient"
+                                    noOfLines={2}
+                                    title={todo.title}
+                                >
+                                    {todo.title}
+                                </Text>
+                                <IconButton
+                                    aria-label="edit todo"
+                                    icon={<EditIcon />}
+                                    size="sm"
+                                    onClick={onOpenTodoModal}
+                                />
+                            </Heading>
+                        ) : (
+                            <SkeletonText noOfLines={1} />
+                        )}
+                    </CardHeader>
+                    <CardBody>
+                        {todo ? (
+                            <Text
+                                noOfLines={5}
+                                title={todo.description}
+                                onClick={onOpenInfoModal}
+                                cursor="pointer"
+                            >
+                                {todo.description}
+                            </Text>
+                        ) : (
+                            <SkeletonText noOfLines={5} />
+                        )}
+                    </CardBody>
+                    <CardFooter
                         display="flex"
-                        alignItems="center"
+                        gap={10}
                         justifyContent="space-between"
                     >
-                        <Text
-                            variant="with-gradient"
-                            noOfLines={2}
-                            title={todo.title}
-                        >
-                            {todo.title}
-                        </Text>
-                        <IconButton
-                            aria-label="edit todo"
-                            icon={<EditIcon />}
-                            size="sm"
-                            onClick={onOpenTodoModal}
-                        />
-                    </Heading>
-                ) : (
-                    <SkeletonText noOfLines={1} />
-                )}
-            </CardHeader>
-            <CardBody>
-                {todo ? (
-                    <Text
-                        noOfLines={5}
-                        title={todo.description}
-                        onClick={onOpenInfoModal}
-                        cursor="pointer"
-                    >
-                        {todo.description}
-                    </Text>
-                ) : (
-                    <SkeletonText noOfLines={5} />
-                )}
-            </CardBody>
-            <CardFooter display="flex" gap={10} justifyContent="space-between">
-                {todo ? (
-                    <Text as="div" display="flex">
-                        {dateText}
-                        &nbsp;
-                        {date}
-                    </Text>
-                ) : (
-                    <SkeletonText noOfLines={1} w="50%" />
-                )}
-                {todo && (
-                    <FormControl
-                        display="flex"
-                        alignItems="center"
-                        isDisabled={!todo}
-                        w="auto"
-                    >
-                        <FormLabel mb={0}>
-                            <Text>Completed:</Text>
-                        </FormLabel>
-                        <Switch name="isCompleted" />
-                    </FormControl>
-                )}
-            </CardFooter>
+                        {todo ? (
+                            <Text as="div" display="flex">
+                                {dateText}
+                                &nbsp;
+                                {date}
+                            </Text>
+                        ) : (
+                            <SkeletonText noOfLines={1} w="50%" />
+                        )}
+                        {todo && (
+                            <FormControl
+                                display="flex"
+                                alignItems="center"
+                                isDisabled={!todo}
+                                w="auto"
+                            >
+                                <FormLabel mb={0}>
+                                    <Text>Completed:</Text>
+                                </FormLabel>
+                                <Switch
+                                    name="isCompleted"
+                                    isChecked={todo.isCompleted}
+                                    onChange={onChange}
+                                />
+                            </FormControl>
+                        )}
+                    </CardFooter>
+                </>
+            )}
+
             {todo && (
                 <>
                     <TodoInfoModal
@@ -130,9 +184,11 @@ const TodoCard: FC<TodoCardType> = ({ todo }) => {
                         onClose={onCloseInfoModal}
                     />
                     <TodoModal
+                        index={index}
                         todo={todo}
                         isOpen={isTodoModalOpen}
                         onClose={onCloseTodoModal}
+                        setTodos={setTodos}
                     />
                 </>
             )}
@@ -140,4 +196,4 @@ const TodoCard: FC<TodoCardType> = ({ todo }) => {
     );
 };
 
-export default TodoCard;
+export default memo(TodoCard);
