@@ -7,7 +7,7 @@ pub struct UpdateTodo<'info> {
     pub user: Signer<'info>,
     #[account(
         mut, 
-        seeds=[user.key().as_ref(), params.title.as_ref()], 
+        seeds=[params.title.as_ref(), user.key().as_ref()], 
         bump, 
         realloc = 32 + 4 + params.title.len() + 4 + params.description.len() + 8 + 1 + 8 + 8 + 8,
         realloc::payer=user, 
@@ -16,10 +16,10 @@ pub struct UpdateTodo<'info> {
     pub todo: Account<'info, TodoState>,
     #[account(
         mut,
-        seeds=["counter".as_bytes().as_ref(), user.key().as_ref()],
+        seeds=["stats".as_bytes().as_ref(), user.key().as_ref()],
         bump,
     )]
-    pub counter: Account<'info, TodoCounterState>,
+    pub stats: Account<'info, StatsState>,
     pub system_program: Program<'info, System>,
 }
 
@@ -35,18 +35,19 @@ impl UpdateTodo<'_> {
     pub fn process_instruction(ctx: Context<UpdateTodo>, params: UpdateTodoParams) -> Result<()> {
         let clock = Clock::get()?;
         let todo = &mut ctx.accounts.todo;
-        let counter = &mut ctx.accounts.counter;
+        let stats = &mut ctx.accounts.stats;
 
-        if !todo.is_completed && params.is_completed {
-            counter.completed += 1;
-            todo.complete_date = clock.unix_timestamp;
-        } else if todo.is_completed && !params.is_completed {
-            counter.completed -= 1;
-            todo.complete_date = 0;
+        if params.is_completed {
+            if todo.complete_date == 0 {
+                stats.completed += 1;
+            }
+            
+            todo.complete_date = clock.unix_timestamp * 1000;
         }
 
         todo.description = params.description;
         todo.deadline = params.deadline;
+        todo.is_completed = params.is_completed;
 
         Ok(())
     }

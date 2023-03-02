@@ -7,14 +7,14 @@ export const getPdas = (
     todoTitle: string
 ) => {
     const [todoPda] = web3.PublicKey.findProgramAddressSync(
-        [Buffer.from(user.publicKey.toBuffer()), Buffer.from(todoTitle)],
+        [Buffer.from(todoTitle), user.publicKey.toBuffer()],
         program.programId
     );
 
-    const [counterPda] = web3.PublicKey.findProgramAddressSync(
-        [Buffer.from('counter'), user.publicKey.toBuffer()],
+    const [statsPda] = web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('stats'), user.publicKey.toBuffer()],
         program.programId
     );
 
-    return { todoPda, counterPda };
+    return { todoPda, statsPda };
 };

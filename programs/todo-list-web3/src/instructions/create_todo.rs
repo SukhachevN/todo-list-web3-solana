@@ -7,7 +7,7 @@ pub struct CreateTodo<'info> {
     pub user: Signer<'info>,
     #[account(
         init, 
-        seeds=[user.key().as_ref(), params.title.as_ref()], 
+        seeds=[params.title.as_ref(), user.key().as_ref()], 
         bump, 
         payer=user, 
         space = 32 + 4 + params.title.len() + 4 + params.description.len() + 8 + 1 + 8 + 8 + 8
@@ -15,12 +15,12 @@ pub struct CreateTodo<'info> {
     pub todo: Account<'info, TodoState>,
     #[account(
         init_if_needed,
-        seeds=["counter".as_bytes().as_ref(), user.key().as_ref()],
+        seeds=["stats".as_bytes().as_ref(), user.key().as_ref()],
         bump,
         payer=user,
-        space=std::mem::size_of::<TodoCounterState>() + 8,
+        space=std::mem::size_of::<StatsState>() + 8,
     )]
-    pub counter: Account<'info, TodoCounterState>,
+    pub stats: Account<'info, StatsState>,
     pub system_program: Program<'info, System>,
 }
 
@@ -42,11 +42,11 @@ impl CreateTodo<'_> {
         todo.description = params.description;
         todo.deadline = params.deadline;
         todo.is_completed = false;
-        todo.create_date = clock.unix_timestamp;
+        todo.create_date = clock.unix_timestamp * 1000;
 
-        let todo_counter = &mut ctx.accounts.counter;
+        let stats = &mut ctx.accounts.stats;
 
-        todo_counter.total += 1;
+        stats.created += 1;
 
         Ok(())
     }

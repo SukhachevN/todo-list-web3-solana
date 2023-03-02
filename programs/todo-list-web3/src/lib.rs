@@ -6,7 +6,7 @@ pub mod state;
 use instructions::*;
 use state::*;
 
-declare_id!("DazSNC93k3B6fUxxg5rhzoyP6owpGhzkjWpucdMQBWTU");
+declare_id!("9MJCUr9Uoj3o75yiDrNLxsknWuwkbisGobyH3Effi186");
 
 #[program]
 pub mod todo_list_web3 {

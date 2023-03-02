@@ -1,0 +1,8 @@
+.wallet-adapter-button-trigger:not([disabled]) {
+    background-image: linear-gradient(to left, #6c29bf, #8d5ec6);
+    transition: 200ms;
+}
+
+.wallet-adapter-button-trigger:not([disabled]):hover {
+    background-image: linear-gradient(to left, #6c29bf, #8d5ec6);
+}
