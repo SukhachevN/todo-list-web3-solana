@@ -1,20 +1,13 @@
-import { getDateFromTodo } from '@/utils/dateUtils';
-import { handleCreateUpdateTodo } from '@/utils/handlers/handleCreateUpdateTodo';
-import { TodoCardType } from '@/utils/types';
 import { EditIcon } from '@chakra-ui/icons';
 import {
-    Box,
     Card,
     CardBody,
     CardFooter,
     CardHeader,
     Center,
-    Divider,
-    Flex,
     FormControl,
     FormLabel,
     Heading,
-    HStack,
     IconButton,
     SkeletonText,
     Spinner,
@@ -25,6 +18,11 @@ import {
 } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { ChangeEvent, FC, memo, useState } from 'react';
+
+import { getDateFromTodo } from '@/utils/dateUtils';
+import { handleCreateUpdateTodo } from '@/utils/handlers/handleCreateUpdateTodo';
+import { TodoCardType } from '@/utils/types';
+
 import TodoInfoModal from './TodoInfoModal';
 import TodoModal from './TodoModal';
 import { useWorkspace } from './WorkspaceProvider';
@@ -91,7 +89,7 @@ const TodoCard: FC<TodoCardType> = ({ todo, index, setTodos }) => {
     };
 
     return (
-        <Card h="300px" maxW="500px">
+        <Card h="320px">
             {isUpdating ? (
                 <Center h="100%">
                     <Spinner />

@@ -1,4 +1,3 @@
-import { TodoInfoModalType } from '@/utils/types';
 import {
     Divider,
     Modal,
@@ -10,8 +9,9 @@ import {
     ModalOverlay,
     Text,
 } from '@chakra-ui/react';
-import { BN } from '@project-serum/anchor';
 import { FC } from 'react';
+
+import { TodoInfoModalType } from '@/utils/types';
 
 const TodoInfoModal: FC<TodoInfoModalType> = ({
     isOpen,

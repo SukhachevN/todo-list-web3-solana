@@ -1,5 +1,4 @@
 import { extendTheme, Theme } from '@chakra-ui/react';
-import { mode } from '@chakra-ui/theme-tools';
 
 type StyleOptions = {
     theme: typeof theme;
@@ -21,10 +20,8 @@ export const theme = extendTheme({
                 background: 'green.selection',
                 color: 'black.selection',
             },
-            _dark: {
-                body: {
-                    background: 'black.main',
-                },
+            body: {
+                background: 'black.main',
             },
         },
     },
@@ -43,13 +40,15 @@ export const theme = extendTheme({
         purple: {
             main: '#9945ff',
             hover: '#a358ff',
+            start: '#6c29bf',
+            end: '#8d5ec6',
         },
     },
     components: {
         Button: {
             variants: {
                 default: {
-                    bgGradient: ['linear(to-l,  #6c29bf, #8d5ec6)'],
+                    bgGradient: 'linear(to-l, purple.start, purple.end)',
                     _focusVisible: {
                         boxShadow: 'none',
                     },
@@ -57,7 +56,7 @@ export const theme = extendTheme({
                         transform: 'scale(1.02)',
                     },
                     '&:hover[disabled]': {
-                        bgGradient: ['linear(to-l,  #6c29bf, #8d5ec6)'],
+                        bgGradient: 'linear(to-l, purple.start, purple.end)',
                         transform: 'none',
                     },
                 },
@@ -85,17 +84,11 @@ export const theme = extendTheme({
         },
         Input: {
             variants: {
-                outline: ({
-                    theme: { colors },
-                    ...otherProps
-                }: StyleOptions) => ({
+                outline: ({ theme: { colors } }: StyleOptions) => ({
                     field: {
                         _focusVisible: {
                             borderColor: 'transparent',
-                            boxShadow: mode(
-                                `0 0 0 1px ${colors.purple.main}`,
-                                `0 0 0 1px ${colors.green.main}`
-                            )(otherProps),
+                            boxShadow: `0 0 0 1px ${colors.green.main}`,
                         },
                     },
                 }),
@@ -120,32 +113,22 @@ export const theme = extendTheme({
         },
         Textarea: {
             variants: {
-                outline: ({
-                    theme: { colors },
-                    ...otherProps
-                }: StyleOptions) => ({
+                outline: ({ theme: { colors } }: StyleOptions) => ({
                     _focusVisible: {
                         borderColor: 'transparent',
-                        boxShadow: mode(
-                            `0 0 0 1px ${colors.purple.main}`,
-                            `0 0 0 1px ${colors.green.main}`
-                        )(otherProps),
+                        boxShadow: `0 0 0 1px ${colors.green.main}`,
                     },
                 }),
             },
         },
         Card: {
             variants: {
-                default: (props: StyleOptions) => ({
+                default: ({ theme: { colors } }: StyleOptions) => ({
                     container: {
-                        bg: mode('white', 'arsenic')(props),
+                        bg: 'arsenic',
                         _hover: {
                             transform: 'scale(1.01)',
-                            borderBottom: '1px solid',
-                            borderColor: mode(
-                                'purple.main',
-                                'green.main'
-                            )(props),
+                            borderBottom: `1px solid ${colors.green.main}`,
                         },
                     },
                 }),
@@ -156,16 +139,16 @@ export const theme = extendTheme({
         },
         Modal: {
             variants: {
-                default: (props: StyleOptions) => ({
+                default: {
                     dialog: {
-                        bg: mode('white', 'arsenic')(props),
+                        bg: 'arsenic',
                     },
                     closeButton: {
                         _focusVisible: {
                             boxShadow: 'none',
                         },
                     },
-                }),
+                },
             },
             defaultProps: {
                 variant: 'default',

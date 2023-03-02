@@ -1,4 +1,4 @@
-import { Flex, HStack, Spacer } from '@chakra-ui/react';
+import { Flex, Spacer } from '@chakra-ui/react';
 
 import dynamic from 'next/dynamic';
 import styles from '@/styles/Home.module.css';

@@ -43,3 +43,8 @@ export const getDeleteTodoErrorAlert = (title: string, error: string) => ({
     ...errorAlertBase,
     description: `Todo "${title}" was not deleted. ${error}`,
 });
+
+export const getFetchTodosErrorAlert = (error: string) => ({
+    ...errorAlertBase,
+    description: `Cant fetch todos. ${error}`,
+});

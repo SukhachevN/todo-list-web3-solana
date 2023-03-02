@@ -1,8 +1,8 @@
 import { BN, Program, web3 } from '@project-serum/anchor';
-import { TodoListWeb3 } from '../todo_list_web3';
-
 import { type WalletAdapterProps } from '@solana/wallet-adapter-base';
 import { CreateToastFnReturn } from '@chakra-ui/react';
+import { Dispatch, SetStateAction } from 'react';
+
 import {
     getCreateTodoAlert,
     getCreateTodoErrorAlert,
@@ -10,7 +10,7 @@ import {
     getUpdateTodoErrorAlert,
 } from '../alerts';
 import { TodoAccountType, TodoStateType, TodoType } from '../types';
-import { Dispatch, SetStateAction } from 'react';
+import { TodoListWeb3 } from '../todo_list_web3';
 
 export type HandleCreateUpdateTodoArgs = {
     index: number;

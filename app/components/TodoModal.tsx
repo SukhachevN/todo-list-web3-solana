@@ -1,7 +1,3 @@
-import { getDateFromTodo, maxDate, minDate } from '@/utils/dateUtils';
-import { handleCreateUpdateTodo } from '@/utils/handlers/handleCreateUpdateTodo';
-import { handleDeleteTodo } from '@/utils/handlers/handleDeleteTodo';
-import { TodoModalType, TodoStateType } from '@/utils/types';
 import {
     Button,
     Center,
@@ -23,10 +19,14 @@ import {
     useToast,
     VStack,
 } from '@chakra-ui/react';
-
 import { useWallet } from '@solana/wallet-adapter-react';
-
 import { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
+
+import { getDateFromTodo, maxDate, minDate } from '@/utils/dateUtils';
+import { handleCreateUpdateTodo } from '@/utils/handlers/handleCreateUpdateTodo';
+import { handleDeleteTodo } from '@/utils/handlers/handleDeleteTodo';
+import { TodoModalType, TodoStateType } from '@/utils/types';
+
 import { useWorkspace } from './WorkspaceProvider';
 
 const TodoModal: FC<TodoModalType> = ({
