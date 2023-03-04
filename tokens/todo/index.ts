@@ -9,10 +9,7 @@ import {
     toMetaplexFile,
 } from '@metaplex-foundation/js';
 
-import {
-    DataV2,
-    createCreateMetadataAccountV2Instruction,
-} from '@metaplex-foundation/mpl-token-metadata';
+import { createCreateMetadataAccountV2Instruction } from '@metaplex-foundation/mpl-token-metadata';
 
 const TOKEN_NAME = 'TODO';
 const TOKEN_SYMBOL = 'TODO';
@@ -25,7 +22,7 @@ async function createToken(
     payer: web3.Keypair,
     programId: web3.PublicKey
 ) {
-    const [mintAuth] = await web3.PublicKey.findProgramAddress(
+    const [mintAuth] = web3.PublicKey.findProgramAddressSync(
         [Buffer.from('mint')],
         programId
     );
@@ -68,7 +65,7 @@ async function createToken(
         creators: null,
         collection: null,
         uses: null,
-    } as DataV2;
+    };
 
     const instruction = createCreateMetadataAccountV2Instruction(
         {
