@@ -27,7 +27,7 @@ const TodoInfoModal: FC<TodoInfoModalType> = ({
             <ModalOverlay />
             <ModalContent height="484px">
                 <ModalHeader>
-                    <Text variant="with-gradient" noOfLines={2} title={title}>
+                    <Text variant="gradient-main" noOfLines={2} title={title}>
                         {title}
                     </Text>
                 </ModalHeader>

@@ -7,6 +7,13 @@ const errorAlertBase: UseToastOptions = {
     duration: 5000,
 };
 
+const warningAlertBase: UseToastOptions = {
+    isClosable: true,
+    status: 'warning',
+    title: 'Warning',
+    duration: 5000,
+};
+
 const successAlertBase: UseToastOptions = {
     isClosable: true,
     status: 'success',
@@ -48,3 +55,9 @@ export const getFetchTodosErrorAlert = (error: string) => ({
     ...errorAlertBase,
     description: `Cant fetch todos. ${error}`,
 });
+
+export const fetchStatsErrorAlert = {
+    ...warningAlertBase,
+    description:
+        "Looks like you still did'nt created any todo! Let's go create todo and come back here later",
+};

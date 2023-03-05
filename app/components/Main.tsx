@@ -115,7 +115,7 @@ const Main = () => {
                           />
                       ))}
                 {!isLoadingTodos && !todos.length && (
-                    <Text variant="with-gradient" textAlign="center">
+                    <Text variant="gradient-main" textAlign="center">
                         Here you will see your todos
                     </Text>
                 )}

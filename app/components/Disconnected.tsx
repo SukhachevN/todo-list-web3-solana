@@ -10,7 +10,7 @@ const Disconnected = () => {
 
     return (
         <VStack spacing={30} pt={50}>
-            <Text variant="with-gradient" fontSize="6xl" fontWeight="extrabold">
+            <Text variant="gradient-main" fontSize="6xl" fontWeight="extrabold">
                 Todo list on solana blockchain.
             </Text>
             <Text fontSize="2xl">

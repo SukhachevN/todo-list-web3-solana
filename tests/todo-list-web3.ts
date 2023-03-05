@@ -18,7 +18,7 @@ describe('todo-list-web3', async () => {
     const todoTitle = 'my first todo';
 
     const mint = new anchor.web3.PublicKey(
-        '5bSjKfMknZxs49dtQhJHwye2CoDNCztWGbyzNVvyyXu5'
+        'EDDacn4tWBKUmodiXo1KgdrCeNMm1iiTUJQMZ3BxudgU'
     );
 
     const { todoPda, statsPda, mintAuthorityPda } = getPdas(
@@ -78,7 +78,7 @@ describe('todo-list-web3', async () => {
 
         const userAta = await getAccount(provider.connection, tokenAccount);
 
-        expect(Number(userAta.amount) === 50);
+        expect(Number(userAta.amount) === 50 * Math.pow(10, 2));
 
         console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
     });

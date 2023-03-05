@@ -78,7 +78,7 @@ impl CreateTodo<'_> {
                     &[*ctx.bumps.get("mint_authority").unwrap()],
                 ]],
             ),
-            50
+            5000
         )?;
 
         Ok(())

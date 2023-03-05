@@ -71,7 +71,7 @@ impl UpdateTodo<'_> {
                             &[*ctx.bumps.get("mint_authority").unwrap()],
                         ]],
                     ),
-                    100,
+                    10000,
                 )?;
             }
             

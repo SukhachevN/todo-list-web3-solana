@@ -121,7 +121,7 @@ const TodoModal: FC<TodoModalType> = ({
                 ) : (
                     <>
                         <ModalHeader>
-                            <Text variant="with-gradient">
+                            <Text variant="gradient-main">
                                 {todo ? 'Edit todo' : 'Create todo'}
                             </Text>
                         </ModalHeader>

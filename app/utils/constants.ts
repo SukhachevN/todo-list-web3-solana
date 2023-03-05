@@ -9,3 +9,5 @@ export const PROGRAM_ID = new PublicKey(
 export const TOKEN_MINT = new PublicKey(
     process.env.NEXT_PUBLIC_TOKEN_MINT ?? ''
 );
+
+export const TODO_DECIMAL = 2;

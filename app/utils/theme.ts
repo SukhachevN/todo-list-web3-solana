@@ -69,13 +69,33 @@ export const theme = extendTheme({
         Text: {
             variants: {
                 default: {
-                    _dark: {
-                        color: 'silverSand',
-                    },
+                    color: 'silverSand',
                 },
-                'with-gradient': {
+                'gradient-main': {
                     bgGradient: 'linear(to-l, purple.main, green.main)',
                     bgClip: 'text',
+                },
+                'gradient-1': {
+                    bgGradient:
+                        'linear-gradient(101.11deg,#f087ff 14.47%,#6e1fce 39.43%)',
+                    bgClip: 'text',
+                },
+                'gradient-2': {
+                    bgGradient:
+                        'linear-gradient(100.93deg,#1fcff1 15.61%,#234cb6 41.38%)',
+                    bgClip: 'text',
+                },
+                'gradient-3': {
+                    bgGradient:
+                        'linear-gradient(97.65deg,#19fb9b 11.36%,#199890 54.3%)',
+                    bgClip: 'text',
+                },
+                link: {
+                    color: 'silverSand',
+                    _hover: {
+                        bgGradient: 'linear(to-l, purple.main, green.main)',
+                        bgClip: 'text',
+                    },
                 },
             },
             defaultProps: {
