@@ -1,6 +1,8 @@
 import { web3 } from '@project-serum/anchor';
+import { getAssociatedTokenAddress } from '@solana/spl-token';
 
 import { getDeleteTodoAlert, getDeleteTodoErrorAlert } from '../alerts';
+import { TOKEN_MINT } from '../constants';
 import { HandleCreateUpdateTodoArgs } from './handleCreateUpdateTodo';
 
 export type HandleDeleteTodoArgs = Omit<
@@ -36,10 +38,23 @@ export const handleDeleteTodo = async ({
         program.programId
     );
 
+    const tokenAccount = await getAssociatedTokenAddress(TOKEN_MINT, publicKey);
+
+    const [mintAuthorityPda] = web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('mint')],
+        program.programId
+    );
+
     try {
         const instruction = await program.methods
             .deleteTodo()
-            .accounts({ todo: todoPda, stats: statsPda })
+            .accounts({
+                todo: todoPda,
+                stats: statsPda,
+                mint: TOKEN_MINT,
+                tokenAccount,
+                mintAuthority: mintAuthorityPda,
+            })
             .transaction();
 
         const transaction = new web3.Transaction().add(instruction);

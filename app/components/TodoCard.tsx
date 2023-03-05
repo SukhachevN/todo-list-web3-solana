@@ -106,7 +106,7 @@ const TodoCard: FC<TodoCardType> = ({ todo, index, setTodos }) => {
                                 justifyContent="space-between"
                             >
                                 <Text
-                                    variant="with-gradient"
+                                    variant="gradient-main"
                                     noOfLines={2}
                                     title={todo.title}
                                 >

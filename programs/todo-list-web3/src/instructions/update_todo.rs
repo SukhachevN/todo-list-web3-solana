@@ -1,5 +1,8 @@
 use crate::*;
 
+use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::token::{mint_to, Mint, MintTo, Token, TokenAccount};
+
 #[derive(Accounts)]
 #[instruction(params: UpdateTodoParams)]
 pub struct UpdateTodo<'info> {
@@ -20,6 +23,20 @@ pub struct UpdateTodo<'info> {
         bump,
     )]
     pub stats: Account<'info, StatsState>,
+    #[account(mut)]
+    pub mint: Account<'info, Mint>,
+    /// CHECK: manual check
+    #[account(seeds = ["mint".as_bytes().as_ref()], bump)]
+    pub mint_authority: UncheckedAccount<'info>,
+    #[account(
+        init_if_needed,
+        payer = user,
+        associated_token::mint = mint,
+        associated_token::authority = user
+    )]
+    pub token_account: Box<Account<'info, TokenAccount>>,
+    pub token_program: Program<'info, Token>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
 }
 
@@ -40,6 +57,22 @@ impl UpdateTodo<'_> {
         if params.is_completed {
             if todo.complete_date == 0 {
                 stats.completed += 1;
+
+                mint_to(
+                    CpiContext::new_with_signer(
+                        ctx.accounts.token_program.to_account_info(),
+                        MintTo {
+                            authority: ctx.accounts.mint_authority.to_account_info(),
+                            to: ctx.accounts.token_account.to_account_info(),
+                            mint: ctx.accounts.mint.to_account_info(),
+                        },
+                        &[&[
+                            b"mint".as_ref(),
+                            &[*ctx.bumps.get("mint_authority").unwrap()],
+                        ]],
+                    ),
+                    10000,
+                )?;
             }
             
             todo.complete_date = clock.unix_timestamp * 1000;

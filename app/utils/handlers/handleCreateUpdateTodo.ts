@@ -11,6 +11,8 @@ import {
 } from '../alerts';
 import { TodoAccountType, TodoStateType, TodoType } from '../types';
 import { TodoListWeb3 } from '../todo_list_web3';
+import { TOKEN_MINT } from '../constants';
+import { getAssociatedTokenAddress } from '@solana/spl-token';
 
 export type HandleCreateUpdateTodoArgs = {
     index: number;
@@ -67,7 +69,20 @@ export const handleCreateUpdateTodo = async ({
 
     const transaction = new web3.Transaction();
 
-    const accounts = { todo: todoPda, stats: statsPda };
+    const tokenAccount = await getAssociatedTokenAddress(TOKEN_MINT, publicKey);
+
+    const [mintAuthorityPda] = web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('mint')],
+        program.programId
+    );
+
+    const accounts = {
+        todo: todoPda,
+        stats: statsPda,
+        mint: TOKEN_MINT,
+        mintAuthority: mintAuthorityPda,
+        tokenAccount,
+    };
 
     if (todo) {
         const instruction = await program.methods

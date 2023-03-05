@@ -49,3 +49,9 @@ export type CurrentTodoStateType = {
     index: number;
     todo: TodoType | null;
 };
+
+export type StatsState = {
+    created: BN;
+    completed: BN;
+    deleted: BN;
+};

@@ -1,14 +1,15 @@
 import * as anchor from '@project-serum/anchor';
 import { Program } from '@project-serum/anchor';
+import { getAccount, getAssociatedTokenAddress } from '@solana/spl-token';
 import { expect } from 'chai';
 import { TodoListWeb3 } from '../target/types/todo_list_web3';
 import { airdropSolIfNeeded } from './utils/airdropSolIfNeeded';
 import { getPdas } from './utils/getPdas';
 import { getTodosAccounts } from './utils/getTodosAccounts';
 
-describe('todo-list-web3', () => {
-    // Configure the client to use the local cluster.
-    anchor.setProvider(anchor.AnchorProvider.env());
+describe('todo-list-web3', async () => {
+    const provider = anchor.AnchorProvider.env();
+    anchor.setProvider(provider);
 
     const program = anchor.workspace.TodoListWeb3 as Program<TodoListWeb3>;
 
@@ -16,7 +17,17 @@ describe('todo-list-web3', () => {
 
     const todoTitle = 'my first todo';
 
-    const { todoPda, statsPda } = getPdas(user, program, todoTitle);
+    const mint = new anchor.web3.PublicKey(
+        'EDDacn4tWBKUmodiXo1KgdrCeNMm1iiTUJQMZ3BxudgU'
+    );
+
+    const { todoPda, statsPda, mintAuthorityPda } = getPdas(
+        user,
+        program,
+        todoTitle
+    );
+
+    const tokenAccount = await getAssociatedTokenAddress(mint, user.publicKey);
 
     before(async () => {
         try {
@@ -42,6 +53,9 @@ describe('todo-list-web3', () => {
                 user: user.publicKey,
                 todo: todoPda,
                 stats: statsPda,
+                mint,
+                mintAuthority: mintAuthorityPda,
+                tokenAccount,
             })
             .signers([user])
             .rpc();
@@ -62,6 +76,10 @@ describe('todo-list-web3', () => {
 
         expect(statsAccount.created.toNumber() === 1);
 
+        const userAta = await getAccount(provider.connection, tokenAccount);
+
+        expect(Number(userAta.amount) === 50 * Math.pow(10, 2));
+
         console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
     });
 
@@ -79,6 +97,9 @@ describe('todo-list-web3', () => {
                 user: user.publicKey,
                 todo: todoPda,
                 stats: statsPda,
+                mint,
+                mintAuthority: mintAuthorityPda,
+                tokenAccount,
             })
             .signers([user])
             .rpc();
@@ -105,6 +126,9 @@ describe('todo-list-web3', () => {
                 user: user.publicKey,
                 todo: todoPda,
                 stats: statsPda,
+                mint,
+                mintAuthority: mintAuthorityPda,
+                tokenAccount,
             })
             .signers([user])
             .rpc();
