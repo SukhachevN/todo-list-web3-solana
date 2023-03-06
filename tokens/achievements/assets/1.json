@@ -1,0 +1,14 @@
+{
+    "name": "I did it!",
+    "symbol": "TODO",
+    "description": "Complete 1 todo.",
+    "image": "1.png",
+    "properties": {
+        "files": [
+            {
+                "uri": "1.png",
+                "type": "image/png"
+            }
+        ]
+    }
+}

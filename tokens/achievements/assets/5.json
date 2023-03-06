@@ -1,0 +1,14 @@
+{
+    "name": "Why you create us?",
+    "symbol": "TODO",
+    "description": "Delete 10 todos.",
+    "image": "5.png",
+    "properties": {
+        "files": [
+            {
+                "uri": "5.png",
+                "type": "image/png"
+            }
+        ]
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "name": "Nothing is impossible",
+    "symbol": "TODO",
+    "description": "Complete 1000 todos.",
+    "image": "10.png",
+    "properties": {
+        "files": [
+            {
+                "uri": "10.png",
+                "type": "image/png"
+            }
+        ]
+    }
+}

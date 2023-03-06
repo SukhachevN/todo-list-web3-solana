@@ -1,0 +1,14 @@
+{
+    "name": "Big deal!",
+    "symbol": "TODO",
+    "description": "Complete 100 todos.",
+    "image": "7.png",
+    "properties": {
+        "files": [
+            {
+                "uri": "7.png",
+                "type": "image/png"
+            }
+        ]
+    }
+}

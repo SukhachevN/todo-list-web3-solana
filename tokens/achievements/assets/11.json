@@ -1,0 +1,14 @@
+{
+    "name": "TODO Annihilator",
+    "symbol": "TODO",
+    "description": "Delete 1000 todos.",
+    "image": "11.png",
+    "properties": {
+        "files": [
+            {
+                "uri": "11.png",
+                "type": "image/png"
+            }
+        ]
+    }
+}

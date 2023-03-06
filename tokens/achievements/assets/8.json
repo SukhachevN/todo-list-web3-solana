@@ -1,0 +1,14 @@
+{
+    "name": "TODO destroyer",
+    "symbol": "TODO",
+    "description": "Delete 100 todos.",
+    "image": "8.png",
+    "properties": {
+        "files": [
+            {
+                "uri": "8.png",
+                "type": "image/png"
+            }
+        ]
+    }
+}

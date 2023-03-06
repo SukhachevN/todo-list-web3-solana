@@ -1,0 +1,14 @@
+{
+    "name": "TODO Master",
+    "symbol": "TODO",
+    "description": "Create 100 todos.",
+    "image": "6.png",
+    "properties": {
+        "files": [
+            {
+                "uri": "6.png",
+                "type": "image/png"
+            }
+        ]
+    }
+}
