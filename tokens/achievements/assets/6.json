@@ -3,6 +3,7 @@
     "symbol": "TODO",
     "description": "Create 100 todos.",
     "image": "6.png",
+    "attributes": [],
     "properties": {
         "files": [
             {

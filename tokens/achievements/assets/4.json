@@ -3,6 +3,7 @@
     "symbol": "TODO",
     "description": "Complete 10 todos.",
     "image": "4.png",
+    "attributes": [],
     "properties": {
         "files": [
             {

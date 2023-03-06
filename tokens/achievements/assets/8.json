@@ -3,6 +3,7 @@
     "symbol": "TODO",
     "description": "Delete 100 todos.",
     "image": "8.png",
+    "attributes": [],
     "properties": {
         "files": [
             {
