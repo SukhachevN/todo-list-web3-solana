@@ -21,7 +21,11 @@ describe('todo-list-web3', async () => {
         'EDDacn4tWBKUmodiXo1KgdrCeNMm1iiTUJQMZ3BxudgU'
     );
 
-    const { todoPda, statsPda, mintAuthorityPda } = getPdas(
+    const TOKEN_METADATA_PROGRAM_ID = new anchor.web3.PublicKey(
+        'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'
+    );
+
+    const { todoPda, statsPda, mintAuthorityPda, achievementsPda } = getPdas(
         user,
         program,
         todoTitle
@@ -140,6 +144,60 @@ describe('todo-list-web3', async () => {
         expect(statsAccount.deleted.toNumber() === 1);
 
         expect(!todosAccounts.length);
+
+        console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
+    });
+
+    it('mint achievement nft', async () => {
+        const mintKeypair: anchor.web3.Keypair = anchor.web3.Keypair.generate();
+        const tokenAddress = await anchor.utils.token.associatedAddress({
+            mint: mintKeypair.publicKey,
+            owner: user.publicKey,
+        });
+        console.log(`New token: ${mintKeypair.publicKey}`);
+
+        const [metadataAddress] = anchor.web3.PublicKey.findProgramAddressSync(
+            [
+                Buffer.from('metadata'),
+                TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+                mintKeypair.publicKey.toBuffer(),
+            ],
+            TOKEN_METADATA_PROGRAM_ID
+        );
+
+        const [masterEditionAddress] =
+            anchor.web3.PublicKey.findProgramAddressSync(
+                [
+                    Buffer.from('metadata'),
+                    TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+                    mintKeypair.publicKey.toBuffer(),
+                    Buffer.from('edition'),
+                ],
+                TOKEN_METADATA_PROGRAM_ID
+            );
+
+        const tx = await program.methods
+            .mintAchievementNft({
+                amount: { one: {} },
+                actionType: { create: {} },
+            })
+            .accounts({
+                stats: statsPda,
+                achievements: achievementsPda,
+                masterEdition: masterEditionAddress,
+                metadata: metadataAddress,
+                mint: mintKeypair.publicKey,
+                tokenAccount: tokenAddress,
+                user: user.publicKey,
+                tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+            })
+            .signers([mintKeypair, user])
+            .rpc();
+
+        const achievementsAccount =
+            await program.account.achievementsState.fetch(achievementsPda);
+
+        expect(achievementsAccount.createOneTodo);
 
         console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
     });

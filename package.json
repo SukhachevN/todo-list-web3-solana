@@ -2,7 +2,8 @@
     "scripts": {
         "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
         "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
-        "create-todo-token": "ts-node tokens/todo/index.ts"
+        "create-todo-token": "ts-node tokens/todo/index.ts",
+        "create-achievements-metadata": "ts-node tokens/achievements/index.ts"
     },
     "dependencies": {
         "@metaplex-foundation/js": "^0.18.3",

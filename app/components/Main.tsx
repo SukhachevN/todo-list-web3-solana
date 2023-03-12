@@ -11,7 +11,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useEffect, useState } from 'react';
 import { useImmer } from 'use-immer';
 
-import { emptyArray } from '@/utils/constants';
+import { emptyTodoArray } from '@/utils/constants';
 import { CurrentTodoStateType, TodoAccountType } from '@/utils/types';
 import { getFetchTodosErrorAlert } from '@/utils/alerts';
 
@@ -98,7 +98,7 @@ const Main = () => {
                 minChildWidth="400px"
             >
                 {isLoadingTodos
-                    ? emptyArray.map((_, index) => (
+                    ? emptyTodoArray.map((_, index) => (
                           <TodoCard
                               key={index}
                               index={index}

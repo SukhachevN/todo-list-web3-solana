@@ -1,6 +1,6 @@
 import * as web3 from '@solana/web3.js';
 import * as token from '@solana/spl-token';
-import { initializeKeypair } from './initializeKeypair';
+import { initializeKeypair } from '../initializeKeypair';
 import * as fs from 'fs';
 import {
     bundlrStorage,

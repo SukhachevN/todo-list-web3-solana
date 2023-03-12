@@ -1,15 +1,5 @@
 {
     "name": "TODO Legend",
-    "symbol": "TODO",
-    "description": "Create 1000 todos.",
-    "image": "9.png",
-    "attributes": [],
-    "properties": {
-        "files": [
-            {
-                "uri": "9.png",
-                "type": "image/png"
-            }
-        ]
-    }
+    "symbol": "TODOACHV",
+    "description": "Create 1000 todos."
 }

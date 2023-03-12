@@ -1,4 +1,4 @@
-import { Box, Flex, Skeleton, Text, useToast } from '@chakra-ui/react';
+import { Box, Divider, Flex, Skeleton, Text, useToast } from '@chakra-ui/react';
 import { web3 } from '@project-serum/anchor';
 import { getAccount, getAssociatedTokenAddress } from '@solana/spl-token';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -6,8 +6,10 @@ import { useEffect, useState } from 'react';
 
 import { useWorkspace } from '@/components/WorkspaceProvider';
 import { fetchStatsErrorAlert } from '@/utils/alerts';
-import { TODO_DECIMAL, TOKEN_MINT } from '@/utils/constants';
+import { TOKEN_MINT } from '@/utils/constants';
 import { StatsState } from '@/utils/types';
+import StatsInfo from './StatsInfo';
+import Achievements from './Achievements';
 
 const Stats = () => {
     const { publicKey } = useWallet();
@@ -58,46 +60,16 @@ const Stats = () => {
     }, [publicKey, program]);
 
     return (
-        <Box>
-            <Flex gap="50px">
-                <Box>
-                    <Flex fontSize="2xl" align="center">
-                        Created:&nbsp;
-                        {isLoading ? (
-                            <Skeleton w="100px" h="24px" />
-                        ) : (
-                            <Text variant="gradient-1">{created}</Text>
-                        )}
-                    </Flex>
-                    <Flex fontSize="2xl" align="center">
-                        Completed:&nbsp;
-                        {isLoading ? (
-                            <Skeleton w="100px" h="24px" />
-                        ) : (
-                            <Text variant="gradient-2">{completed}</Text>
-                        )}
-                    </Flex>
-                    <Flex fontSize="2xl" align="center">
-                        Deleted:&nbsp;
-                        {isLoading ? (
-                            <Skeleton w="100px" h="24px" />
-                        ) : (
-                            <Text variant="gradient-3">{deleted}</Text>
-                        )}
-                    </Flex>
-                    <Flex fontSize="2xl" align="center">
-                        Balance:&nbsp;
-                        {isLoading ? (
-                            <Skeleton w="100px" h="24px" />
-                        ) : (
-                            <Text variant="gradient-main">
-                                {todoTokenBalance / Math.pow(10, TODO_DECIMAL)}
-                                &nbsp;$TODO
-                            </Text>
-                        )}
-                    </Flex>
-                </Box>
-            </Flex>
+        <Box h="100%">
+            <StatsInfo
+                isLoading={isLoading}
+                created={created}
+                completed={completed}
+                deleted={deleted}
+                todoTokenBalance={todoTokenBalance}
+            />
+            <Divider m="20px 0" />
+            <Achievements stats={stats} />
         </Box>
     );
 };

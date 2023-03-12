@@ -1,15 +1,5 @@
 {
     "name": "TODO Beginner",
-    "symbol": "TODO",
-    "description": "Create 10 todos.",
-    "image": "3.png",
-    "attributes": [],
-    "properties": {
-        "files": [
-            {
-                "uri": "3.png",
-                "type": "image/png"
-            }
-        ]
-    }
+    "symbol": "TODOACHV",
+    "description": "Create 10 todos."
 }

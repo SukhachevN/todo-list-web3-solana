@@ -1,15 +1,5 @@
 {
     "name": "10/10",
-    "symbol": "TODO",
-    "description": "Complete 10 todos.",
-    "image": "4.png",
-    "attributes": [],
-    "properties": {
-        "files": [
-            {
-                "uri": "4.png",
-                "type": "image/png"
-            }
-        ]
-    }
+    "symbol": "TODOACHV",
+    "description": "Complete 10 todos."
 }
