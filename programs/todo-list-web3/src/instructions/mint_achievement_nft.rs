@@ -149,7 +149,7 @@ impl MintAchievementNft<'_> {
         let amount = &params.amount;
         let action_type = &params.action_type;
 
-        let is_unlocked = match action_type {
+        let achievement_mint = match action_type {
             ActionType::Create => match amount {
                 AchievementAmount::One => achievements.create_one_todo,
                 AchievementAmount::Ten => achievements.create_ten_todos,
@@ -170,7 +170,10 @@ impl MintAchievementNft<'_> {
             },
         };
 
-        require!(!is_unlocked, AchiementError::AlreadyUnlocked);
+        require!(
+            achievement_mint.eq(&Pubkey::default()),
+            AchiementError::AlreadyUnlocked
+        );
 
         match params.action_type {
             ActionType::Create => {
@@ -216,24 +219,26 @@ impl MintAchievementNft<'_> {
             achievement.uri.to_string(),
         )?;
 
+        let mint = ctx.accounts.mint.key();
+
         match params.action_type {
             ActionType::Create => match amount {
-                AchievementAmount::One => achievements.create_one_todo = true,
-                AchievementAmount::Ten => achievements.create_ten_todos = true,
-                AchievementAmount::Hundreed => achievements.create_hundreed_todos = true,
-                AchievementAmount::Thousand => achievements.create_thousand_todos = true,
+                AchievementAmount::One => achievements.create_one_todo = mint,
+                AchievementAmount::Ten => achievements.create_ten_todos = mint,
+                AchievementAmount::Hundreed => achievements.create_hundreed_todos = mint,
+                AchievementAmount::Thousand => achievements.create_thousand_todos = mint,
             },
             ActionType::Complete => match amount {
-                AchievementAmount::One => achievements.complete_one_todo = true,
-                AchievementAmount::Ten => achievements.complete_ten_todos = true,
-                AchievementAmount::Hundreed => achievements.complete_hundreed_todos = true,
-                AchievementAmount::Thousand => achievements.complete_thousand_todos = true,
+                AchievementAmount::One => achievements.complete_one_todo = mint,
+                AchievementAmount::Ten => achievements.complete_ten_todos = mint,
+                AchievementAmount::Hundreed => achievements.complete_hundreed_todos = mint,
+                AchievementAmount::Thousand => achievements.complete_thousand_todos = mint,
             },
             ActionType::Delete => match amount {
-                AchievementAmount::One => achievements.delete_one_todo = true,
-                AchievementAmount::Ten => achievements.delete_ten_todos = true,
-                AchievementAmount::Hundreed => achievements.delete_hundreed_todos = true,
-                AchievementAmount::Thousand => achievements.delete_thousand_todos = true,
+                AchievementAmount::One => achievements.delete_one_todo = mint,
+                AchievementAmount::Ten => achievements.delete_ten_todos = mint,
+                AchievementAmount::Hundreed => achievements.delete_hundreed_todos = mint,
+                AchievementAmount::Thousand => achievements.delete_thousand_todos = mint,
             },
         };
 

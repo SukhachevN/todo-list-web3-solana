@@ -15,10 +15,10 @@ describe('todo-list-web3', async () => {
 
     const user = anchor.web3.Keypair.generate();
 
-    const todoTitle = 'my first todo';
+    const todoTitle = 'My first todo';
 
     const mint = new anchor.web3.PublicKey(
-        'EDDacn4tWBKUmodiXo1KgdrCeNMm1iiTUJQMZ3BxudgU'
+        '2ZHvZ3r17Gu4GevX6dcY8e3s7JGs6NQKJpJydLU8qf86'
     );
 
     const TOKEN_METADATA_PROGRAM_ID = new anchor.web3.PublicKey(
@@ -197,7 +197,10 @@ describe('todo-list-web3', async () => {
         const achievementsAccount =
             await program.account.achievementsState.fetch(achievementsPda);
 
-        expect(achievementsAccount.createOneTodo);
+        expect(
+            achievementsAccount.createOneTodo.toBase58() ===
+                mintKeypair.publicKey.toBase58()
+        );
 
         console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
     });

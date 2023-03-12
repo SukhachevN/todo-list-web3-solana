@@ -20,18 +20,18 @@ pub struct TodoState {
 
 #[account]
 pub struct AchievementsState {
-    pub create_one_todo: bool,         // 1
-    pub complete_one_todo: bool,       // 1
-    pub delete_one_todo: bool,         // 1
-    pub create_ten_todos: bool,        // 1
-    pub complete_ten_todos: bool,      // 1
-    pub delete_ten_todos: bool,        // 1
-    pub create_hundreed_todos: bool,   // 1
-    pub complete_hundreed_todos: bool, // 1
-    pub delete_hundreed_todos: bool,   // 1
-    pub create_thousand_todos: bool,   // 1
-    pub complete_thousand_todos: bool, // 1
-    pub delete_thousand_todos: bool,   // 1
+    pub create_one_todo: Pubkey,         // 32
+    pub complete_one_todo: Pubkey,       // 32
+    pub delete_one_todo: Pubkey,         // 32
+    pub create_ten_todos: Pubkey,        // 32
+    pub complete_ten_todos: Pubkey,      // 32
+    pub delete_ten_todos: Pubkey,        // 32
+    pub create_hundreed_todos: Pubkey,   // 32
+    pub complete_hundreed_todos: Pubkey, // 32
+    pub delete_hundreed_todos: Pubkey,   // 32
+    pub create_thousand_todos: Pubkey,   // 32
+    pub complete_thousand_todos: Pubkey, // 32
+    pub delete_thousand_todos: Pubkey,   // 32
 }
 
 pub struct AchievementInfo<'a> {
