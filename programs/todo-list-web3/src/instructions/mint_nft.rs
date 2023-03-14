@@ -10,15 +10,15 @@ use mpl_token_metadata::{instruction as token_instruction, ID as TOKEN_METADATA_
 
 #[derive(Accounts)]
 pub struct MintNft<'info> {
-    /// CHECK: We're about to create this with Metaplex
+    /// CHECK: Create this with Metaplex
     #[account(mut)]
     pub metadata: UncheckedAccount<'info>,
-    /// CHECK: We're about to create this with Metaplex
+    /// CHECK: Create this with Metaplex
     #[account(mut)]
     pub master_edition: UncheckedAccount<'info>,
     #[account(mut)]
     pub mint: Signer<'info>,
-    /// CHECK: We're about to create this with Anchor
+    /// CHECK: Create this with Anchor
     #[account(mut)]
     pub token_account: UncheckedAccount<'info>,
     #[account(mut)]
@@ -27,7 +27,7 @@ pub struct MintNft<'info> {
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
-    /// CHECK: Metaplex will check this
+    /// CHECK: Metaplex check
     pub token_metadata_program: UncheckedAccount<'info>,
 }
 
