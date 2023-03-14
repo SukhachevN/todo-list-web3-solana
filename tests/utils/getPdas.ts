@@ -21,5 +21,10 @@ export const getPdas = (
         program.programId
     );
 
-    return { todoPda, statsPda, mintAuthorityPda };
+    const [achievementsPda] = web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('achievements'), user.publicKey.toBuffer()],
+        program.programId
+    );
+
+    return { todoPda, statsPda, mintAuthorityPda, achievementsPda };
 };

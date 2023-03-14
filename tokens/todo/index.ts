@@ -1,6 +1,6 @@
 import * as web3 from '@solana/web3.js';
 import * as token from '@solana/spl-token';
-import { initializeKeypair } from './initializeKeypair';
+import { initializeKeypair } from '../initializeKeypair';
 import * as fs from 'fs';
 import {
     bundlrStorage,
@@ -118,7 +118,7 @@ async function main() {
     const payer = await initializeKeypair(connection);
 
     const programId = new web3.PublicKey(
-        '9MJCUr9Uoj3o75yiDrNLxsknWuwkbisGobyH3Effi186'
+        'CTAZ3XiKohcVEfDDiCgBkiVLnMHF7zDg9wuLXkP2uDwv'
     );
 
     await createToken(connection, payer, programId);

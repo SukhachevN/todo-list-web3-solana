@@ -36,8 +36,6 @@ const WorkspaceProvider = ({ children }: any) => {
     );
 };
 
-const useWorkspace = (): Workspace => {
-    return useContext(WorkspaceContext);
-};
+const useWorkspace = (): Workspace => useContext(WorkspaceContext);
 
 export { WorkspaceProvider, useWorkspace };
