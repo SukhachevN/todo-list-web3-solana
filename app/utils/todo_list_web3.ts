@@ -307,51 +307,51 @@ export type TodoListWeb3 = {
         "fields": [
           {
             "name": "createOneTodo",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "completeOneTodo",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "deleteOneTodo",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "createTenTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "completeTenTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "deleteTenTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "createHundreedTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "completeHundreedTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "deleteHundreedTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "createThousandTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "completeThousandTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "deleteThousandTodos",
-            "type": "bool"
+            "type": "publicKey"
           }
         ]
       }
@@ -793,51 +793,51 @@ export const IDL: TodoListWeb3 = {
         "fields": [
           {
             "name": "createOneTodo",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "completeOneTodo",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "deleteOneTodo",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "createTenTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "completeTenTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "deleteTenTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "createHundreedTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "completeHundreedTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "deleteHundreedTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "createThousandTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "completeThousandTodos",
-            "type": "bool"
+            "type": "publicKey"
           },
           {
             "name": "deleteThousandTodos",
-            "type": "bool"
+            "type": "publicKey"
           }
         ]
       }

@@ -1,4 +1,4 @@
-import { UseToastOptions } from '@chakra-ui/react';
+import { Link, UseToastOptions } from '@chakra-ui/react';
 
 const errorAlertBase: UseToastOptions = {
     isClosable: true,
@@ -61,3 +61,23 @@ export const fetchStatsErrorAlert = {
     description:
         "Looks like you still did'nt created any todo! Let's go create todo and come back here later",
 };
+
+export const getMintAchievementAlert = (mint: string) => ({
+    ...successAlertBase,
+    description: (
+        <>
+            Whoa! Your achievement NFT mint -{' '}
+            <Link
+                target="_blank"
+                href={`https://explorer.solana.com/address/${mint}?cluster=devnet`}
+            >
+                https://explorer.solana.com/address/${mint}?cluster=devnet
+            </Link>
+        </>
+    ),
+});
+
+export const getMintAchievementErrorAlert = (error: string) => ({
+    ...errorAlertBase,
+    description: `Cant mint achievement NFT. ${error}`,
+});

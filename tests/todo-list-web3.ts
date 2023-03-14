@@ -150,31 +150,32 @@ describe('todo-list-web3', async () => {
 
     it('mint achievement nft', async () => {
         const mintKeypair: anchor.web3.Keypair = anchor.web3.Keypair.generate();
+
+        const mint = mintKeypair.publicKey;
+
         const tokenAddress = await anchor.utils.token.associatedAddress({
-            mint: mintKeypair.publicKey,
+            mint,
             owner: user.publicKey,
         });
-        console.log(`New token: ${mintKeypair.publicKey}`);
 
-        const [metadataAddress] = anchor.web3.PublicKey.findProgramAddressSync(
+        const [metadataPda] = anchor.web3.PublicKey.findProgramAddressSync(
             [
                 Buffer.from('metadata'),
                 TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-                mintKeypair.publicKey.toBuffer(),
+                mint.toBuffer(),
             ],
             TOKEN_METADATA_PROGRAM_ID
         );
 
-        const [masterEditionAddress] =
-            anchor.web3.PublicKey.findProgramAddressSync(
-                [
-                    Buffer.from('metadata'),
-                    TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-                    mintKeypair.publicKey.toBuffer(),
-                    Buffer.from('edition'),
-                ],
-                TOKEN_METADATA_PROGRAM_ID
-            );
+        const [masterEditionPda] = anchor.web3.PublicKey.findProgramAddressSync(
+            [
+                Buffer.from('metadata'),
+                TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+                mint.toBuffer(),
+                Buffer.from('edition'),
+            ],
+            TOKEN_METADATA_PROGRAM_ID
+        );
 
         const tx = await program.methods
             .mintAchievementNft({
@@ -184,9 +185,9 @@ describe('todo-list-web3', async () => {
             .accounts({
                 stats: statsPda,
                 achievements: achievementsPda,
-                masterEdition: masterEditionAddress,
-                metadata: metadataAddress,
-                mint: mintKeypair.publicKey,
+                masterEdition: masterEditionPda,
+                metadata: metadataPda,
+                mint,
                 tokenAccount: tokenAddress,
                 user: user.publicKey,
                 tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,

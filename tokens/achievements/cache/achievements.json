@@ -1,0 +1,148 @@
+{
+    "achievements": [
+        {
+            "title": "My first todo",
+            "description": "Create 1 todo.",
+            "achievementKey": "createOneTodo",
+            "mintArg": {
+                "amount": { "one": {} },
+                "actionType": { "create": {} }
+            },
+            "statsStateKey": "created",
+            "amount": 1,
+            "image": "https://arweave.net/4NJyssuUlZceoqtknyU5VEK3wMqgTbZWciZevN9D9GM"
+        },
+        {
+            "title": "I did it!",
+            "description": "Complete 1 todo.",
+            "achievementKey": "completeOneTodo",
+            "mintArg": {
+                "amount": { "one": {} },
+                "actionType": { "complete": {} }
+            },
+            "statsStateKey": "completed",
+            "amount": 1,
+            "image": "https://arweave.net/uWhzJiQZpcuoScvmXVgbLt7447oH1Ez0QMV_QPJC-wg"
+        },
+        {
+            "title": "Delete me!",
+            "description": "Delete 1 todo.",
+            "achievementKey": "deleteOneTodo",
+            "mintArg": {
+                "amount": { "one": {} },
+                "actionType": { "delete": {} }
+            },
+            "statsStateKey": "deleted",
+            "amount": 1,
+            "image": "https://arweave.net/WUd1Xy3ZHtZ_7FI7NdZmGnWbQLUHYolMJOk7TmMT_jU"
+        },
+        {
+            "title": "TODO Beginner",
+            "description": "Create 10 todos.",
+            "achievementKey": "createTenTodos",
+            "mintArg": {
+                "amount": { "ten": {} },
+                "actionType": { "create": {} }
+            },
+            "statsStateKey": "created",
+            "amount": 10,
+            "image": "https://arweave.net/xX6VJn9_eXcJQ1irmu9aJrdLmiGzATDuxkq0EmmM07g"
+        },
+        {
+            "title": "10/10",
+            "description": "Complete 10 todos.",
+            "achievementKey": "completeTenTodos",
+            "mintArg": {
+                "amount": { "ten": {} },
+                "actionType": { "complete": {} }
+            },
+            "statsStateKey": "completed",
+            "amount": 10,
+            "image": "https://arweave.net/-qIssbua3Y3nnB3wxQV62voJJ8jpM17N2qVAJbiAxfg"
+        },
+        {
+            "title": "Why you create us?",
+            "description": "Delete 10 todos.",
+            "achievementKey": "deleteTenTodos",
+            "mintArg": {
+                "amount": { "ten": {} },
+                "actionType": { "delete": {} }
+            },
+            "statsStateKey": "deleted",
+            "amount": 10,
+            "image": "https://arweave.net/fvLF8qVLqK1FVMK3GHOFw6AVIgB_mpxuQXLteLc_f-4"
+        },
+        {
+            "title": "TODO Master",
+            "description": "Create 100 todos.",
+            "achievementKey": "createHundreedTodos",
+            "mintArg": {
+                "amount": { "hundreed": {} },
+                "actionType": { "create": {} }
+            },
+            "statsStateKey": "created",
+            "amount": 100,
+            "image": "https://arweave.net/TWg6ET5F6ej8w0eP2TLRo_PmVTbX0qIV_2bMnnLV5cE"
+        },
+        {
+            "title": "Big deal!",
+            "description": "Complete 100 todos.",
+            "achievementKey": "completeHundreedTodos",
+            "mintArg": {
+                "amount": { "hundreed": {} },
+                "actionType": { "complete": {} }
+            },
+            "statsStateKey": "completed",
+            "amount": 100,
+            "image": "https://arweave.net/aMCyt9EM5M4y3lOrJY6_sLk16byqotoyYAifELm1kRg"
+        },
+        {
+            "title": "TODO destroyer",
+            "description": "Delete 100 todos.",
+            "achievementKey": "deleteHundreedTodos",
+            "mintArg": {
+                "amount": { "hundreed": {} },
+                "actionType": { "delete": {} }
+            },
+            "statsStateKey": "deleted",
+            "amount": 100,
+            "image": "https://arweave.net/2Y7-bswHcsmzPN02_j6V0TJEXbGlc585Ox4dhsLVU00"
+        },
+        {
+            "title": "TODO Legend",
+            "description": "Create 1000 todos.",
+            "achievementKey": "createThousandTodos",
+            "mintArg": {
+                "amount": { "thousand": {} },
+                "actionType": { "create": {} }
+            },
+            "statsStateKey": "created",
+            "amount": 1000,
+            "image": "https://arweave.net/zLClzKG7RblXAhpVAZ1495u-GjuF52YKepcpcpzgQXo"
+        },
+        {
+            "title": "Nothing is impossible",
+            "description": "Complete 1000 todos.",
+            "achievementKey": "completeThousandTodos",
+            "mintArg": {
+                "amount": { "thousand": {} },
+                "actionType": { "complete": {} }
+            },
+            "statsStateKey": "completed",
+            "amount": 1000,
+            "image": "https://arweave.net/Af-yxJvKdA4mWvnjUqmlbhQDkch3lwiPEpNnvq1WwOU"
+        },
+        {
+            "title": "TODO Annihilator",
+            "description": "Delete 1000 todos.",
+            "achievementKey": "deleteThousandTodos",
+            "mintArg": {
+                "amount": { "thousand": {} },
+                "actionType": { "delete": {} }
+            },
+            "statsStateKey": "deleted",
+            "amount": 1000,
+            "image": "https://arweave.net/Oar9c_jn_Tj8kArVCJ9nnUHvlDNql0UjPDzgDA4pXA8"
+        }
+    ]
+}

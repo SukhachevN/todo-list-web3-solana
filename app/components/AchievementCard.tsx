@@ -1,103 +1,191 @@
-import { StatsState } from '@/utils/types';
 import {
-    Box,
+    Button,
     Card,
     CardBody,
     CardFooter,
     CardHeader,
-    Divider,
-    Skeleton,
-    SkeletonText,
+    Link,
+    Progress,
+    Tooltip,
+    useToast,
 } from '@chakra-ui/react';
-import { FindNftByMetadataInput } from '@metaplex-foundation/js';
-import { web3 } from '@project-serum/anchor';
+import { utils, web3 } from '@project-serum/anchor';
+import { useWallet } from '@solana/wallet-adapter-react';
 import Image from 'next/image';
-import { FC, useEffect, useMemo, useState } from 'react';
-import { useMetaplex } from './MetaplexProvider';
+import { FC, useEffect, useState } from 'react';
+import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
+
+import { imgPlaceholder } from '@/utils/constants';
+import { AchievementsMetadataType, StatsState } from '@/utils/types';
+import {
+    getMintAchievementAlert,
+    getMintAchievementErrorAlert,
+} from '@/utils/alerts';
+
+import { useWorkspace } from './WorkspaceProvider';
 
 type AchievementCardType = {
-    uri: string;
+    mint: web3.PublicKey | null;
     stats: StatsState | null;
-};
+} & Omit<AchievementsMetadataType, 'key'>;
 
-type Achievement = {
-    name: string;
-    description: string;
-    image: string;
-    attributes: [
-        {
-            trait_type: 'key';
-            value: keyof StatsState;
-        },
-        {
-            trait_type: 'amount';
-            value: number;
+const AchievementCard: FC<AchievementCardType> = ({
+    image,
+    title,
+    mint,
+    stats,
+    amount,
+    statsStateKey,
+    description,
+    mintArg,
+}) => {
+    const { publicKey } = useWallet();
+
+    const { program } = useWorkspace();
+
+    const [nftMint, setNftMint] = useState('');
+    const [isMinting, setIsMinting] = useState(false);
+
+    const toast = useToast();
+
+    const currentAmount = stats ? stats[statsStateKey].toNumber() : 0;
+
+    const isDisabled = currentAmount < amount;
+
+    const mintNft = async () => {
+        if (nftMint || !publicKey || !program) return;
+
+        try {
+            setIsMinting(true);
+
+            const mintKeypair = web3.Keypair.generate();
+
+            const mint = mintKeypair.publicKey;
+
+            const tokenAddress = await utils.token.associatedAddress({
+                mint,
+                owner: publicKey,
+            });
+
+            const [metadataPda] = web3.PublicKey.findProgramAddressSync(
+                [
+                    Buffer.from('metadata'),
+                    TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+                    mint.toBuffer(),
+                ],
+                TOKEN_METADATA_PROGRAM_ID
+            );
+
+            const [masterEditionPda] = web3.PublicKey.findProgramAddressSync(
+                [
+                    Buffer.from('metadata'),
+                    TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+                    mint.toBuffer(),
+                    Buffer.from('edition'),
+                ],
+                TOKEN_METADATA_PROGRAM_ID
+            );
+
+            const [achievementsPda] = web3.PublicKey.findProgramAddressSync(
+                [Buffer.from('achievements'), publicKey.toBuffer()],
+                program.programId
+            );
+
+            const [statsPda] = web3.PublicKey.findProgramAddressSync(
+                [Buffer.from('stats'), publicKey.toBuffer()],
+                program.programId
+            );
+
+            await program.methods
+                .mintAchievementNft(mintArg)
+                .accounts({
+                    stats: statsPda,
+                    achievements: achievementsPda,
+                    masterEdition: masterEditionPda,
+                    metadata: metadataPda,
+                    mint,
+                    tokenAccount: tokenAddress,
+                    user: publicKey,
+                    tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+                })
+                .signers([mintKeypair])
+                .rpc();
+
+            setNftMint(mint.toBase58());
+
+            const alert = getMintAchievementAlert(mint.toBase58());
+            toast(alert);
+        } catch (error) {
+            if (error instanceof Error) {
+                const alert = getMintAchievementErrorAlert(error.message);
+                toast(alert);
+            }
+        } finally {
+            setIsMinting(false);
         }
-    ];
-};
-
-const AchievementCard: FC<AchievementCardType> = ({ uri, stats }) => {
-    const [achievement, setAchievement] = useState<Achievement | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const isDisabled = useMemo(() => {
-        if (achievement && stats) {
-            const key = achievement.attributes[0].value;
-            const amount = achievement.attributes[1].value;
-
-            const currentAmount = stats[key].toNumber();
-
-            return currentAmount < amount;
-        }
-    }, [stats, achievement]);
+    };
 
     useEffect(() => {
-        const fetchNft = async () => {
-            try {
-                setIsLoading(true);
+        if (
+            mint &&
+            mint.toBase58() != web3.SystemProgram.programId.toBase58()
+        ) {
+            setNftMint(mint.toBase58());
+        }
+    }, [mint]);
 
-                const response = await fetch(uri);
-                const result = await response.json();
-
-                setAchievement(result);
-            } catch (error) {
-                console.log(error);
-                // TODO
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchNft();
-    }, []);
+    const UnlockedAchievementFooter = () =>
+        nftMint ? (
+            <Link
+                target="_blank"
+                href={`https://explorer.solana.com/address/${nftMint}?cluster=devnet`}
+            >
+                View
+            </Link>
+        ) : (
+            <Button onClick={mintNft} isLoading={isMinting}>
+                Mint
+            </Button>
+        );
 
     return (
         <Card
-            h="300px"
+            h="320px"
             w="300px"
             filter={isDisabled ? 'grayscale(1)' : ''}
             cursor={isDisabled ? 'not-allowed' : ''}
         >
-            <CardHeader textAlign="center">
-                {isLoading ? <SkeletonText noOfLines={1} /> : achievement?.name}
-            </CardHeader>
+            <CardHeader textAlign="center">{title}</CardHeader>
             <CardBody pt={0} display="flex" justifyContent="center">
-                {achievement && (
+                <Tooltip label={description}>
                     <Image
-                        alt={achievement?.name ?? ''}
+                        alt={title}
                         width={150}
                         height={150}
-                        src={achievement?.image ?? ''}
+                        src={image}
+                        placeholder="blur"
+                        blurDataURL={imgPlaceholder}
                     />
-                )}
+                </Tooltip>
             </CardBody>
-            <CardFooter>
-                <Box>
-                    {isLoading ? (
-                        <SkeletonText noOfLines={1} />
-                    ) : (
-                        achievement?.description
-                    )}
-                </Box>
+            <CardFooter
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                h="80px"
+            >
+                {isDisabled ? (
+                    <Tooltip label={`${currentAmount}/${amount}`}>
+                        <Progress
+                            value={currentAmount}
+                            max={amount}
+                            hasStripe
+                            w="100%"
+                        />
+                    </Tooltip>
+                ) : (
+                    <UnlockedAchievementFooter />
+                )}
             </CardFooter>
         </Card>
     );
