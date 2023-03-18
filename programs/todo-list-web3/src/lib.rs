@@ -30,4 +30,17 @@ pub mod todo_list_web3 {
     ) -> Result<()> {
         MintAchievementNft::process_instruction(ctx, params)
     }
+
+    pub fn init_ai_image_generator_counter(
+        ctx: Context<InitAiImageGeneratorCounter>,
+    ) -> Result<()> {
+        InitAiImageGeneratorCounter::process_instruction(ctx)
+    }
+
+    pub fn buy_ai_image_generator_try(
+        ctx: Context<BuyAiImageGeneratorTry>,
+        amount: u32,
+    ) -> Result<()> {
+        BuyAiImageGeneratorTry::process_instruction(ctx, amount)
+    }
 }

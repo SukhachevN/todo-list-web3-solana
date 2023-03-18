@@ -25,11 +25,13 @@ describe('todo-list-web3', async () => {
         'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'
     );
 
-    const { todoPda, statsPda, mintAuthorityPda, achievementsPda } = getPdas(
-        user,
-        program,
-        todoTitle
-    );
+    const {
+        todoPda,
+        statsPda,
+        mintAuthorityPda,
+        achievementsPda,
+        aiImageGeneratorCounterPda,
+    } = getPdas(user, program, todoTitle);
 
     const tokenAccount = await getAssociatedTokenAddress(mint, user.publicKey);
 
@@ -201,6 +203,60 @@ describe('todo-list-web3', async () => {
         expect(
             achievementsAccount.createOneTodo.toBase58() ===
                 mintKeypair.publicKey.toBase58()
+        );
+
+        console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
+    });
+
+    it('init ai image generator counter', async () => {
+        const tx = await program.methods
+            .initAiImageGeneratorCounter()
+            .accounts({
+                user: user.publicKey,
+                aiImageGeneratorCounter: aiImageGeneratorCounterPda,
+            })
+            .signers([user])
+            .rpc();
+
+        const aiImageGeneratorCounterAccount =
+            await program.account.aiImageGeneratingCounterState.fetch(
+                aiImageGeneratorCounterPda
+            );
+
+        expect(aiImageGeneratorCounterAccount.tryCount === 1);
+
+        console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
+    });
+
+    it('buy ai image generator try', async () => {
+        let aiImageGeneratorCounterAccount =
+            await program.account.aiImageGeneratingCounterState.fetch(
+                aiImageGeneratorCounterPda
+            );
+
+        const prevTryCount = aiImageGeneratorCounterAccount.tryCount;
+
+        const amount = 1;
+
+        const tx = await program.methods
+            .buyAiImageGeneratorTry(1)
+            .accounts({
+                user: user.publicKey,
+                aiImageGeneratorCounter: aiImageGeneratorCounterPda,
+                mint,
+                mintAuthority: mintAuthorityPda,
+                tokenAccount,
+            })
+            .signers([user])
+            .rpc();
+
+        aiImageGeneratorCounterAccount =
+            await program.account.aiImageGeneratingCounterState.fetch(
+                aiImageGeneratorCounterPda
+            );
+
+        expect(
+            aiImageGeneratorCounterAccount.tryCount === prevTryCount + amount
         );
 
         console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);

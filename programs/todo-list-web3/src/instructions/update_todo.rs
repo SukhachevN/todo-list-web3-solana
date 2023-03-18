@@ -71,11 +71,11 @@ impl UpdateTodo<'_> {
                             &[*ctx.bumps.get("mint_authority").unwrap()],
                         ]],
                     ),
-                    10000,
+                    COMPLETE_TODO_REWARD,
                 )?;
             }
             
-            todo.complete_date = clock.unix_timestamp * 1000;
+            todo.complete_date = clock.unix_timestamp * MS_IN_ONE_SECOND;
         }
 
         todo.description = params.description;

@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Card,
     CardBody,
@@ -158,14 +159,21 @@ const AchievementCard: FC<AchievementCardType> = ({
             <CardHeader textAlign="center">{title}</CardHeader>
             <CardBody pt={0} display="flex" justifyContent="center">
                 <Tooltip label={description}>
-                    <Image
-                        alt={title}
-                        width={150}
-                        height={150}
-                        src={image}
-                        placeholder="blur"
-                        blurDataURL={imgPlaceholder}
-                    />
+                    <Box
+                        borderRadius="10px"
+                        overflow="hidden"
+                        w="150px"
+                        h="150px"
+                    >
+                        <Image
+                            alt={title}
+                            width={150}
+                            height={150}
+                            src={image}
+                            placeholder="blur"
+                            blurDataURL={imgPlaceholder}
+                        />
+                    </Box>
                 </Tooltip>
             </CardBody>
             <CardFooter
