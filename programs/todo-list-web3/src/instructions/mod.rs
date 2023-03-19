@@ -18,3 +18,9 @@ pub use init_ai_image_generator_counter::*;
 
 pub mod buy_ai_image_generator_try;
 pub use buy_ai_image_generator_try::*;
+
+pub mod use_ai_image_generator_try;
+pub use use_ai_image_generator_try::*;
+
+pub mod mint_ai_image_nft;
+pub use mint_ai_image_nft::*;

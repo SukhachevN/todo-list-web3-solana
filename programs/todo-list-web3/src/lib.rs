@@ -1,8 +1,10 @@
 use anchor_lang::prelude::*;
 
+pub mod error;
 pub mod instructions;
 pub mod state;
 
+use error::*;
 use instructions::*;
 use state::*;
 
@@ -42,5 +44,17 @@ pub mod todo_list_web3 {
         amount: u32,
     ) -> Result<()> {
         BuyAiImageGeneratorTry::process_instruction(ctx, amount)
+    }
+
+    pub fn use_ai_image_generator_try(ctx: Context<UseAiImageGeneratorTry>) -> Result<()> {
+        UseAiImageGeneratorTry::process_instruction(ctx)
+    }
+
+    pub fn mint_ai_image_nft(
+        ctx: Context<MintAiImageNft>,
+        title: String,
+        uri: String,
+    ) -> Result<()> {
+        MintAiImageNft::process_instruction(ctx, title, uri)
     }
 }

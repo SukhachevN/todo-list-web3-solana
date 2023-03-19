@@ -36,7 +36,7 @@ pub struct CreateTodo<'info> {
         associated_token::mint = mint,
         associated_token::authority = user
     )]
-    pub token_account: Box<Account<'info, TokenAccount>>,
+    pub token_account: Account<'info, TokenAccount>,
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,

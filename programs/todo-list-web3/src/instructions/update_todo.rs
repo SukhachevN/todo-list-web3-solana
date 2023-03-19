@@ -29,12 +29,11 @@ pub struct UpdateTodo<'info> {
     #[account(seeds = ["mint".as_bytes().as_ref()], bump)]
     pub mint_authority: UncheckedAccount<'info>,
     #[account(
-        init_if_needed,
-        payer = user,
+        mut,
         associated_token::mint = mint,
         associated_token::authority = user
     )]
-    pub token_account: Box<Account<'info, TokenAccount>>,
+    pub token_account: Account<'info, TokenAccount>,
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,

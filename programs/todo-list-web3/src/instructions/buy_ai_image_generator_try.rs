@@ -3,7 +3,6 @@ use anchor_spl::{token::{Mint, TokenAccount, Token, approve, Approve, burn, Burn
 use crate::*;
 
 #[derive(Accounts)]
-#[instruction(amount: u32)]
 pub struct BuyAiImageGeneratorTry<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
@@ -23,15 +22,19 @@ pub struct BuyAiImageGeneratorTry<'info> {
         associated_token::mint = mint,
         associated_token::authority = user
     )]
-    pub token_account: Box<Account<'info, TokenAccount>>,
+    pub token_account: Account<'info, TokenAccount>,
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
 impl BuyAiImageGeneratorTry<'_> {
-    const GENERATE_IMAGE_PRICE:  u64 = 100000;
+    const GENERATE_IMAGE_PRICE: u64 = 100000;
 
     pub fn process_instruction(ctx: Context<Self>, amount: u32) -> Result<()> {
+
+        require!(amount > 0, AiImageGeneratorCounterError::NegativeTryAmount);
+
+
         // for testing
         let burn_amount = 0;
         // for prod
