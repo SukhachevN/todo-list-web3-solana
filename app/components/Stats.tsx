@@ -1,13 +1,11 @@
-import { Box, Divider, Flex, Skeleton, Text, useToast } from '@chakra-ui/react';
-import { web3 } from '@project-serum/anchor';
-import { getAccount, getAssociatedTokenAddress } from '@solana/spl-token';
+import { Box, Divider, Text, useToast } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useEffect, useState } from 'react';
 
 import { useWorkspace } from '@/components/WorkspaceProvider';
-import { fetchStatsErrorAlert } from '@/utils/alerts';
-import { TOKEN_MINT } from '@/utils/constants';
-import { StatsState } from '@/utils/types';
+import { StatsStateType } from '@/utils/types';
+import { getStats, getUserTodoTokenATA } from '@/utils/accounts';
+
 import StatsInfo from './StatsInfo';
 import Achievements from './Achievements';
 
@@ -15,7 +13,7 @@ const Stats = () => {
     const { publicKey } = useWallet();
     const { program, connection } = useWorkspace();
 
-    const [stats, setStats] = useState<StatsState | null>(null);
+    const [stats, setStats] = useState<StatsStateType | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [todoTokenBalance, setTodoTokenBalance] = useState(0);
 
@@ -29,30 +27,23 @@ const Stats = () => {
         const fetchStats = async () => {
             if (publicKey && program && connection) {
                 setIsLoading(true);
-                const [statsPda] = web3.PublicKey.findProgramAddressSync(
-                    [Buffer.from('stats'), publicKey.toBuffer()],
-                    program.programId
-                );
 
-                try {
-                    const statsAccount = await program.account.statsState.fetch(
-                        statsPda
-                    );
+                const statsAccount = await getStats({
+                    program,
+                    publicKey,
+                    toast,
+                });
 
-                    const tokenAccount = await getAssociatedTokenAddress(
-                        TOKEN_MINT,
-                        publicKey
-                    );
+                const userAta = await getUserTodoTokenATA({
+                    connection,
+                    publicKey,
+                    toast,
+                });
 
-                    const userAta = await getAccount(connection, tokenAccount);
+                setTodoTokenBalance(userAta ? Number(userAta.amount) : 0);
+                setStats(statsAccount);
 
-                    setTodoTokenBalance(Number(userAta.amount));
-                    setStats(statsAccount);
-                } catch (error) {
-                    toast(fetchStatsErrorAlert);
-                } finally {
-                    setIsLoading(false);
-                }
+                setIsLoading(false);
             }
         };
 
@@ -61,15 +52,30 @@ const Stats = () => {
 
     return (
         <Box h="100%">
-            <StatsInfo
-                isLoading={isLoading}
-                created={created}
-                completed={completed}
-                deleted={deleted}
-                todoTokenBalance={todoTokenBalance}
-            />
-            <Divider m="20px 0" />
-            <Achievements stats={stats} />
+            {!isLoading && !stats ? (
+                <Text
+                    mt="50px"
+                    textAlign="center"
+                    fontSize="2xl"
+                    variant="gradient-main"
+                >
+                    Create at least 1 todo to unlock this section
+                </Text>
+            ) : (
+                stats && (
+                    <>
+                        <StatsInfo
+                            isLoading={isLoading}
+                            created={created}
+                            completed={completed}
+                            deleted={deleted}
+                            todoTokenBalance={todoTokenBalance}
+                        />
+                        <Divider m="20px 0" />
+                        <Achievements stats={stats} />
+                    </>
+                )
+            )}
         </Box>
     );
 };

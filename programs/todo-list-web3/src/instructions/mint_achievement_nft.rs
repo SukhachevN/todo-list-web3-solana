@@ -46,87 +46,77 @@ pub struct MintAchievementNftParams {
 }
 
 impl MintAchievementNft<'_> {
-    const ACHIEVEMENTS: &'static [AchievementInfo<'static>] = &[
+    const TODO_ACHIEVEMENT_NFT_SYMBOL: &'static str = "TODOACHV";
+
+    const ACHIEVEMENTS: &'static [AchievementInfo] = &[
         AchievementInfo {
             title: "My first todo",
-            symbol: "TODOACHV",
             uri: "https://arweave.net/C0ooMLjcTAVibUIQqpmdRccfSv80olKGNvnO-RUUkkU",
             amount_to_unlock: AchievementAmount::One,
             action_type: ActionType::Create,
         },
         AchievementInfo {
             title: "TODO Beginner",
-            symbol: "TODOACHV",
             uri: "https://arweave.net/UGnl05okC9AmaMKQy_2Wb17BtR8HOVHOwHMmI7KG9_g",
             amount_to_unlock: AchievementAmount::Ten,
             action_type: ActionType::Create,
         },
         AchievementInfo {
             title: "TODO Master",
-            symbol: "TODOACHV",
             uri: "https://arweave.net/v3g1NpLrC4ZUp8CQgt1o5hRS7tcQE_K6QDujyJHq3IU",
             amount_to_unlock: AchievementAmount::Hundreed,
             action_type: ActionType::Create,
         },
         AchievementInfo {
             title: "TODO Legend",
-            symbol: "TODOACHV",
             uri: "https://arweave.net/Dg-qhxIIHzApgEAPfej6i8Sl6e4mLi035XAChRRyRZ4",
             amount_to_unlock: AchievementAmount::Thousand,
             action_type: ActionType::Create,
         },
         AchievementInfo {
             title: "I did it!",
-            symbol: "TODOACHV",
             uri: "https://arweave.net/xRZf6Hob1gfzenxXyzPFLOlKVTt8pY4HVgJqcBFvqdk",
             amount_to_unlock: AchievementAmount::One,
             action_type: ActionType::Complete,
         },
         AchievementInfo {
             title: "10/10",
-            symbol: "TODOACHV",
             uri: "https://arweave.net/Vl3gfAA2wlPr8vZd9rzej1JRVQF3wV_XEMIt5Sv_BSY",
             amount_to_unlock: AchievementAmount::Ten,
             action_type: ActionType::Complete,
         },
         AchievementInfo {
             title: "Big deal!",
-            symbol: "TODOACHV",
             uri: "https://arweave.net/8zsYRLNljinq4xFhXeFg7Q_9jsw4ZOEnuLd60Plp-Uc",
             amount_to_unlock: AchievementAmount::Hundreed,
             action_type: ActionType::Complete,
         },
         AchievementInfo {
             title: "Nothing is impossible",
-            symbol: "TODOACHV",
             uri: "https://arweave.net/rkonFvUFLsHyertdH4V2BBfiXjnM_8_7d0mjhc8IQ3I",
             amount_to_unlock: AchievementAmount::Thousand,
             action_type: ActionType::Complete,
         },
         AchievementInfo {
             title: "Delete me!",
-            symbol: "TODOACHV",
             uri: "https://arweave.net/atJN3qA5dgGQ11Y7OHeFL-_EjlPL_GmZ-pn-SOv7tdY",
             amount_to_unlock: AchievementAmount::One,
             action_type: ActionType::Delete,
         },
         AchievementInfo {
             title: "Why you create us?",
-            symbol: "TODOACHV",
             uri: "https://arweave.net/gKIAslQhOSSbYv6p-VqRIa-C9QkFQWHSqCExK-HPeXc",
             amount_to_unlock: AchievementAmount::Ten,
             action_type: ActionType::Delete,
         },
         AchievementInfo {
             title: "TODO destroyer",
-            symbol: "TODOACHV",
             uri: "https://arweave.net/65ZgeUcCA8n49hvvhDzyJ1gtwsRiBf9k7gTQfknI4W0",
             amount_to_unlock: AchievementAmount::Hundreed,
             action_type: ActionType::Delete,
         },
         AchievementInfo {
             title: "TODO Annihilator",
-            symbol: "TODOACHV",
             uri: "https://arweave.net/hklxV78SZ_jsutT8Dw41oyy2J-8TS3a8iqRoqwbuYmg",
             amount_to_unlock: AchievementAmount::Thousand,
             action_type: ActionType::Delete,
@@ -172,26 +162,26 @@ impl MintAchievementNft<'_> {
 
         require!(
             achievement_mint.eq(&Pubkey::default()),
-            AchiementError::AlreadyUnlocked
+            AchievementError::AlreadyUnlocked
         );
 
         match params.action_type {
             ActionType::Create => {
                 require!(
                     stats.created >= *amount as u64,
-                    AchiementError::NotEnoughCreated
+                    AchievementError::NotEnoughCreated
                 );
             }
             ActionType::Complete => {
                 require!(
                     stats.completed >= *amount as u64,
-                    AchiementError::NotEnoughCompleted
+                    AchievementError::NotEnoughCompleted
                 );
             }
             ActionType::Delete => {
                 require!(
                     stats.deleted >= *amount as u64,
-                    AchiementError::NotEnoughDeleted
+                    AchievementError::NotEnoughDeleted
                 );
             }
         };
@@ -215,7 +205,7 @@ impl MintAchievementNft<'_> {
                 remaining_accounts: ctx.remaining_accounts,
             },
             achievement.title.to_string(),
-            achievement.symbol.to_string(),
+            Self::TODO_ACHIEVEMENT_NFT_SYMBOL.to_string(),
             achievement.uri.to_string(),
         )?;
 

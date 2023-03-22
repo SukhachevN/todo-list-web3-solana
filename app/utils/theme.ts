@@ -1,4 +1,4 @@
-import { extendTheme, Theme } from '@chakra-ui/react';
+import { extendTheme } from '@chakra-ui/react';
 
 type StyleOptions = {
     theme: typeof theme;
@@ -183,6 +183,18 @@ export const theme = extendTheme({
             },
             defaultProps: {
                 variant: 'default',
+            },
+        },
+        NumberInput: {
+            variants: {
+                outline: ({ theme: { colors } }: StyleOptions) => ({
+                    field: {
+                        _focusVisible: {
+                            borderColor: 'transparent',
+                            boxShadow: `0 0 0 1px ${colors.green.main}`,
+                        },
+                    },
+                }),
             },
         },
     },

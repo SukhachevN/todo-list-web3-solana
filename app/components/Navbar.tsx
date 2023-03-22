@@ -22,6 +22,7 @@ const NavBar = () => (
         <Flex gap="40px">
             <ActiveLink href="/">Todos</ActiveLink>
             <ActiveLink href="/stats">Stats</ActiveLink>
+            <ActiveLink href="/aiImageGenerator">AI Image Generator</ActiveLink>
         </Flex>
         <Spacer />
         <WalletMultiButton

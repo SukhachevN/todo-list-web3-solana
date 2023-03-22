@@ -16,18 +16,28 @@ import {
     Switch,
     Text,
     Textarea,
+    Tooltip,
     useToast,
     VStack,
 } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
+import { Updater } from 'use-immer';
 
 import { getDateFromTodo, maxDate, minDate } from '@/utils/dateUtils';
 import { handleCreateUpdateTodo } from '@/utils/handlers/handleCreateUpdateTodo';
 import { handleDeleteTodo } from '@/utils/handlers/handleDeleteTodo';
-import { TodoModalType, TodoStateType } from '@/utils/types';
+import { TodoAccountType, TodoStateType, TodoType } from '@/utils/types';
 
 import { useWorkspace } from './WorkspaceProvider';
+
+type TodoModalType = {
+    todo: TodoType | null;
+    isOpen: boolean;
+    onClose: () => void;
+    setTodos: Updater<TodoAccountType[]>;
+    index: number;
+};
 
 const TodoModal: FC<TodoModalType> = ({
     isOpen,
@@ -178,7 +188,11 @@ const TodoModal: FC<TodoModalType> = ({
                             </VStack>
                         </ModalBody>
                         <ModalFooter gap="10px">
-                            {todo && <Button onClick={onDelete}>Delete</Button>}
+                            {todo && (
+                                <Tooltip label="You will loose all rewards received for this todo">
+                                    <Button onClick={onDelete}>Delete</Button>
+                                </Tooltip>
+                            )}
                             <Button type="submit" isDisabled={!isFormChanged}>
                                 {todo ? 'Save' : 'Create'}
                             </Button>

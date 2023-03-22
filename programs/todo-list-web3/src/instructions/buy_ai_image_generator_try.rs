@@ -1,26 +1,23 @@
+use anchor_spl::{token::{Mint, TokenAccount, Token, approve, Approve, burn, Burn}, associated_token::AssociatedToken};
+
 use crate::*;
 
-use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token::{approve, burn, Approve, Burn, Mint, Token, TokenAccount};
-
 #[derive(Accounts)]
-pub struct DeleteTodo<'info> {
+pub struct BuyAiImageGeneratorTry<'info> {
     #[account(mut)]
-    user: Signer<'info>,
-    #[account(mut, close = user, has_one = user)]
-    todo: Account<'info, TodoState>,
+    pub user: Signer<'info>,
     #[account(
-        mut,
-        seeds=["stats".as_bytes().as_ref(), user.key().as_ref()],
-        bump,
+        mut, 
+        seeds=["ai_image_generator_counter".as_bytes().as_ref(), user.key().as_ref()],
+        bump
     )]
-    pub stats: Account<'info, StatsState>,
+    pub ai_image_generator_counter: Account<'info, AiImageGeneratingCounterState>,
     #[account(mut)]
     pub mint: Account<'info, Mint>,
-    /// CHECK: manual check
-    #[account(seeds = ["mint".as_bytes().as_ref()], bump)]
-    pub mint_authority: UncheckedAccount<'info>,
-    #[account(
+     /// CHECK: manual check
+     #[account(seeds = ["mint".as_bytes().as_ref()], bump)]
+     pub mint_authority: UncheckedAccount<'info>,
+     #[account(
         mut,
         associated_token::mint = mint,
         associated_token::authority = user
@@ -28,20 +25,20 @@ pub struct DeleteTodo<'info> {
     pub token_account: Account<'info, TokenAccount>,
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
-    pub system_program: Program<'info, System>,
 }
 
-impl DeleteTodo<'_> {
-    pub fn process_instruction(ctx: Context<DeleteTodo>) -> Result<()> {
-        let stats = &mut ctx.accounts.stats;
+impl BuyAiImageGeneratorTry<'_> {
+    const GENERATE_IMAGE_PRICE: u64 = 100000;
 
-        stats.deleted += 1;
+    pub fn process_instruction(ctx: Context<Self>, amount: u32) -> Result<()> {
 
-        let burn_amount = if ctx.accounts.todo.complete_date == 0 {
-            CREATE_TODO_REWARD
-        } else {
-            CREATE_TODO_REWARD + COMPLETE_TODO_REWARD
-        };
+        require!(amount > 0, AiImageGeneratorCounterError::NegativeTryAmount);
+
+
+        // for testing
+        // let burn_amount = 0;
+        // for prod
+        let burn_amount =  Self::GENERATE_IMAGE_PRICE * amount as u64;
 
         approve(
             CpiContext::new(
@@ -70,6 +67,10 @@ impl DeleteTodo<'_> {
             ),
             burn_amount,
         )?;
+
+        let counter = &mut ctx.accounts.ai_image_generator_counter;
+
+        counter.try_count += amount;
 
         Ok(())
     }

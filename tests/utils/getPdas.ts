@@ -26,5 +26,22 @@ export const getPdas = (
         program.programId
     );
 
-    return { todoPda, statsPda, mintAuthorityPda, achievementsPda };
+    const [aiImageGeneratorCounterPda] = web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('ai_image_generator_counter'), user.publicKey.toBuffer()],
+        program.programId
+    );
+
+    const [savedAiImagePda] = web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('saved_ai_image'), user.publicKey.toBuffer()],
+        program.programId
+    );
+
+    return {
+        todoPda,
+        statsPda,
+        mintAuthorityPda,
+        achievementsPda,
+        aiImageGeneratorCounterPda,
+        savedAiImagePda,
+    };
 };

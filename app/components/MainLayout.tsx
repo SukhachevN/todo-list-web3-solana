@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { Box, Spacer } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
+
 import NavBar from './Navbar';
 
 const MainLayout: FC<{ children: ReactNode }> = ({ children }) => (
@@ -13,7 +14,7 @@ const MainLayout: FC<{ children: ReactNode }> = ({ children }) => (
         <Box h="100vh" padding={4}>
             <NavBar />
             <Spacer />
-            <Box h="calc(100% - 48px)">{children}</Box>
+            <Box h="calc(100% - 82px)">{children}</Box>
         </Box>
     </Box>
 );

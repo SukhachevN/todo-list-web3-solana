@@ -3,6 +3,7 @@ import { getAssociatedTokenAddress } from '@solana/spl-token';
 
 import { getDeleteTodoAlert, getDeleteTodoErrorAlert } from '../alerts';
 import { TOKEN_MINT } from '../constants';
+import { mintAuthoritySeed, statsSeed } from '../seeds';
 import { HandleCreateUpdateTodoArgs } from './handleCreateUpdateTodo';
 
 export type HandleDeleteTodoArgs = Omit<
@@ -22,9 +23,7 @@ export const handleDeleteTodo = async ({
     onClose,
     setTodos,
 }: HandleDeleteTodoArgs) => {
-    if (!publicKey || !program || !todo || !connection) {
-        return;
-    }
+    if (!publicKey || !program || !todo || !connection) return;
 
     setIsUpdating(true);
 
@@ -34,14 +33,14 @@ export const handleDeleteTodo = async ({
     );
 
     const [statsPda] = web3.PublicKey.findProgramAddressSync(
-        [Buffer.from('stats'), publicKey.toBuffer()],
+        [statsSeed, publicKey.toBuffer()],
         program.programId
     );
 
     const tokenAccount = await getAssociatedTokenAddress(TOKEN_MINT, publicKey);
 
     const [mintAuthorityPda] = web3.PublicKey.findProgramAddressSync(
-        [Buffer.from('mint')],
+        [mintAuthoritySeed],
         program.programId
     );
 

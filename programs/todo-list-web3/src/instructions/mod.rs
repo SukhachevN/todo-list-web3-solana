@@ -12,3 +12,18 @@ pub use mint_nft::*;
 
 pub mod mint_achievement_nft;
 pub use mint_achievement_nft::*;
+
+pub mod init_ai_image_generator;
+pub use init_ai_image_generator::*;
+
+pub mod buy_ai_image_generator_try;
+pub use buy_ai_image_generator_try::*;
+
+pub mod use_ai_image_generator_try;
+pub use use_ai_image_generator_try::*;
+
+pub mod mint_ai_image_nft;
+pub use mint_ai_image_nft::*;
+
+pub mod save_ai_image;
+pub use save_ai_image::*;

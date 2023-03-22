@@ -1,15 +1,15 @@
 import { Center, Flex, Spinner, useToast } from '@chakra-ui/react';
-import { web3 } from '@project-serum/anchor';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { FC, useEffect, useState } from 'react';
 
-import { fetchStatsErrorAlert } from '@/utils/alerts';
 import { ACHIEVEMENTS } from '@/utils/constants';
 import {
     AchievementAccountType,
     AchievementsMetadataType,
     AchievementsType,
 } from '@/utils/types';
+import { getAchievementsAccount } from '@/utils/accounts';
+import { getFetchAchievementsListErrorAlert } from '@/utils/alerts';
 
 import AchievementCard from './AchievementCard';
 import { useWorkspace } from './WorkspaceProvider';
@@ -32,6 +32,7 @@ const Achievements: FC<AchievementsType> = ({ stats }) => {
     useEffect(() => {
         const fetchData = async () => {
             if (!publicKey || !program) return;
+
             try {
                 setIsLoading(true);
 
@@ -40,19 +41,21 @@ const Achievements: FC<AchievementsType> = ({ stats }) => {
 
                 setAchievements(achievements);
 
-                const [achievementsPda] = web3.PublicKey.findProgramAddressSync(
-                    [Buffer.from('achievements'), publicKey.toBuffer()],
-                    program.programId
-                );
-
-                const achievementsAccount =
-                    await program.account.achievementsState.fetch(
-                        achievementsPda
-                    );
+                const achievementsAccount = await getAchievementsAccount({
+                    publicKey,
+                    program,
+                    toast,
+                });
 
                 setAchievementAccount(achievementsAccount);
             } catch (error) {
-                toast(fetchStatsErrorAlert);
+                if (error instanceof Error) {
+                    const alert = getFetchAchievementsListErrorAlert(
+                        error.message
+                    );
+
+                    toast(alert);
+                }
             } finally {
                 setIsLoading(false);
             }

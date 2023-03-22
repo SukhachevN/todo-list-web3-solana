@@ -117,9 +117,7 @@ async function main() {
     const connection = new web3.Connection(web3.clusterApiUrl('devnet'));
     const payer = await initializeKeypair(connection);
 
-    const programId = new web3.PublicKey(
-        'CTAZ3XiKohcVEfDDiCgBkiVLnMHF7zDg9wuLXkP2uDwv'
-    );
+    const programId = new web3.PublicKey(process.env.PROGRAM_ID);
 
     await createToken(connection, payer, programId);
 }

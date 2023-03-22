@@ -1,5 +1,8 @@
-import { BN, web3 } from '@project-serum/anchor';
+import { CreateToastFnReturn } from '@chakra-ui/react';
+import { BN, Program, web3 } from '@project-serum/anchor';
+import { Dispatch, SetStateAction } from 'react';
 import { Updater } from 'use-immer';
+
 import { TodoListWeb3 } from './todo_list_web3';
 
 export type TodoType = {
@@ -15,14 +18,6 @@ export type TodoType = {
 export type TodoAccountType = {
     account: TodoType;
     publicKey: web3.PublicKey;
-};
-
-export type TodoModalType = {
-    todo: TodoType | null;
-    isOpen: boolean;
-    onClose: () => void;
-    setTodos: Updater<TodoAccountType[]>;
-    index: number;
 };
 
 export type TodoStateType = {
@@ -51,7 +46,7 @@ export type CurrentTodoStateType = {
     todo: TodoType | null;
 };
 
-export type StatsState = {
+export type StatsStateType = {
     created: BN;
     completed: BN;
     deleted: BN;
@@ -85,11 +80,42 @@ export type AchievementsMetadataType = {
     description: string;
     achievementKey: keyof AchievementAccountType;
     mintArg: MintArgType;
-    statsStateKey: keyof StatsState;
+    statsStateKey: keyof StatsStateType;
     amount: 1 | 10 | 100 | 1000;
     image: string;
 };
 
 export type AchievementsType = {
-    stats: StatsState | null;
+    stats: StatsStateType | null;
+};
+
+export type DefaultFetchAccountArgsType = {
+    publicKey: web3.PublicKey;
+    program: Program<TodoListWeb3>;
+    toast: CreateToastFnReturn;
+};
+
+export type SavedAiImageType = {
+    name: string;
+    description: string;
+    image: string;
+    mint: string;
+    uri: string;
+};
+
+export type AiImageCounterType = {
+    tryCount: number;
+};
+
+export type FetchUserAtaArgsType = {
+    publicKey: web3.PublicKey;
+    connection: web3.Connection;
+    toast: CreateToastFnReturn;
+};
+
+export type AiImageGeneratorElementType = {
+    todoTokenBalance: number;
+    tryCount: number | null;
+    setTryCount: Dispatch<SetStateAction<number | null>>;
+    setTodoTokenBalance: Dispatch<SetStateAction<number | null>>;
 };

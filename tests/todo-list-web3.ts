@@ -2,10 +2,12 @@ import * as anchor from '@project-serum/anchor';
 import { Program } from '@project-serum/anchor';
 import { getAccount, getAssociatedTokenAddress } from '@solana/spl-token';
 import { expect } from 'chai';
+import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
 import { TodoListWeb3 } from '../target/types/todo_list_web3';
 import { airdropSolIfNeeded } from './utils/airdropSolIfNeeded';
 import { getPdas } from './utils/getPdas';
 import { getTodosAccounts } from './utils/getTodosAccounts';
+import { getNftData } from './utils/getNftData';
 
 describe('todo-list-web3', async () => {
     const provider = anchor.AnchorProvider.env();
@@ -17,19 +19,19 @@ describe('todo-list-web3', async () => {
 
     const todoTitle = 'My first todo';
 
-    const mint = new anchor.web3.PublicKey(
-        '2ZHvZ3r17Gu4GevX6dcY8e3s7JGs6NQKJpJydLU8qf86'
-    );
+    const mint = new anchor.web3.PublicKey(process.env.TOKEN_MINT);
 
-    const TOKEN_METADATA_PROGRAM_ID = new anchor.web3.PublicKey(
-        'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s'
-    );
+    const aiImageUri =
+        'https://arweave.net/cwOs2avM3c1ZSh-rxi3e4YM1mwDBYmTdtdtw4seKOK4';
 
-    const { todoPda, statsPda, mintAuthorityPda, achievementsPda } = getPdas(
-        user,
-        program,
-        todoTitle
-    );
+    const {
+        todoPda,
+        statsPda,
+        mintAuthorityPda,
+        achievementsPda,
+        aiImageGeneratorCounterPda,
+        savedAiImagePda,
+    } = getPdas(user, program, todoTitle);
 
     const tokenAccount = await getAssociatedTokenAddress(mint, user.publicKey);
 
@@ -149,33 +151,13 @@ describe('todo-list-web3', async () => {
     });
 
     it('mint achievement nft', async () => {
-        const mintKeypair: anchor.web3.Keypair = anchor.web3.Keypair.generate();
-
-        const mint = mintKeypair.publicKey;
-
-        const tokenAddress = await anchor.utils.token.associatedAddress({
+        const {
+            mintKeypair,
             mint,
-            owner: user.publicKey,
-        });
-
-        const [metadataPda] = anchor.web3.PublicKey.findProgramAddressSync(
-            [
-                Buffer.from('metadata'),
-                TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-                mint.toBuffer(),
-            ],
-            TOKEN_METADATA_PROGRAM_ID
-        );
-
-        const [masterEditionPda] = anchor.web3.PublicKey.findProgramAddressSync(
-            [
-                Buffer.from('metadata'),
-                TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-                mint.toBuffer(),
-                Buffer.from('edition'),
-            ],
-            TOKEN_METADATA_PROGRAM_ID
-        );
+            tokenAddress,
+            metadataPda,
+            masterEditionPda,
+        } = await getNftData(user);
 
         const tx = await program.methods
             .mintAchievementNft({
@@ -202,6 +184,141 @@ describe('todo-list-web3', async () => {
             achievementsAccount.createOneTodo.toBase58() ===
                 mintKeypair.publicKey.toBase58()
         );
+
+        console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
+    });
+
+    it('init ai image generator counter', async () => {
+        const tx = await program.methods
+            .initAiImageGenerator()
+            .accounts({
+                user: user.publicKey,
+                aiImageGeneratorCounter: aiImageGeneratorCounterPda,
+                savedAiImage: savedAiImagePda,
+            })
+            .signers([user])
+            .rpc();
+
+        const aiImageGeneratorCounterAccount =
+            await program.account.aiImageGeneratingCounterState.fetch(
+                aiImageGeneratorCounterPda
+            );
+
+        expect(aiImageGeneratorCounterAccount.tryCount === 1);
+
+        console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
+    });
+
+    it('buy ai image generator try', async () => {
+        let aiImageGeneratorCounterAccount =
+            await program.account.aiImageGeneratingCounterState.fetch(
+                aiImageGeneratorCounterPda
+            );
+
+        const prevTryCount = aiImageGeneratorCounterAccount.tryCount;
+
+        const amount = 1;
+
+        const tx = await program.methods
+            .buyAiImageGeneratorTry(1)
+            .accounts({
+                user: user.publicKey,
+                aiImageGeneratorCounter: aiImageGeneratorCounterPda,
+                mint,
+                mintAuthority: mintAuthorityPda,
+                tokenAccount,
+            })
+            .signers([user])
+            .rpc();
+
+        aiImageGeneratorCounterAccount =
+            await program.account.aiImageGeneratingCounterState.fetch(
+                aiImageGeneratorCounterPda
+            );
+
+        expect(
+            aiImageGeneratorCounterAccount.tryCount === prevTryCount + amount
+        );
+
+        console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
+    });
+
+    it('use ai image generator try', async () => {
+        let aiImageGeneratorCounterAccount =
+            await program.account.aiImageGeneratingCounterState.fetch(
+                aiImageGeneratorCounterPda
+            );
+
+        const prevTryCount = aiImageGeneratorCounterAccount.tryCount;
+
+        const tx = await program.methods
+            .useAiImageGeneratorTry()
+            .accounts({
+                user: user.publicKey,
+                aiImageGeneratorCounter: aiImageGeneratorCounterPda,
+            })
+            .signers([user])
+            .rpc();
+
+        aiImageGeneratorCounterAccount =
+            await program.account.aiImageGeneratingCounterState.fetch(
+                aiImageGeneratorCounterPda
+            );
+
+        expect(aiImageGeneratorCounterAccount.tryCount === prevTryCount - 1);
+
+        console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
+    });
+
+    it('save ai image', async () => {
+        const tx = await program.methods
+            .saveAiImage(aiImageUri)
+            .accounts({ user: user.publicKey, savedAiImage: savedAiImagePda })
+            .signers([user])
+            .rpc();
+
+        const savedAiImageAccount =
+            await program.account.savedAiImageState.fetch(savedAiImagePda);
+
+        expect(savedAiImageAccount.uri === aiImageUri);
+
+        console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
+    });
+
+    it('mint ai image nft', async () => {
+        const title = 'Ai image example';
+
+        const {
+            mintKeypair,
+            mint: nftMint,
+            tokenAddress,
+            metadataPda,
+            masterEditionPda,
+        } = await getNftData(user);
+
+        const tx = await program.methods
+            .mintAiImageNft(title, aiImageUri)
+            .accounts({
+                masterEdition: masterEditionPda,
+                metadata: metadataPda,
+                nftMint,
+                nftTokenAccount: tokenAddress,
+                user: user.publicKey,
+                tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+                todoTokenMint: mint,
+                mintAuthority: mintAuthorityPda,
+                todoTokenAccount: tokenAccount,
+                savedAiImage: savedAiImagePda,
+            })
+            .signers([user, mintKeypair])
+            .rpc();
+
+        const savedAiImageAccount =
+            await program.account.savedAiImageState.fetch(savedAiImagePda);
+
+        expect(savedAiImageAccount.uri === aiImageUri);
+
+        expect(nftMint.toBase58() === savedAiImageAccount.mint.toBase58());
 
         console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
     });
