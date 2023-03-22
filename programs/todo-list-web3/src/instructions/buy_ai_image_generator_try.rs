@@ -11,7 +11,7 @@ pub struct BuyAiImageGeneratorTry<'info> {
         seeds=["ai_image_generator_counter".as_bytes().as_ref(), user.key().as_ref()],
         bump
     )]
-    pub ai_image_generator_counter: Account<'info, AIImageGeneratingCounterState>,
+    pub ai_image_generator_counter: Account<'info, AiImageGeneratingCounterState>,
     #[account(mut)]
     pub mint: Account<'info, Mint>,
      /// CHECK: manual check
@@ -36,9 +36,9 @@ impl BuyAiImageGeneratorTry<'_> {
 
 
         // for testing
-        let burn_amount = 0;
+        // let burn_amount = 0;
         // for prod
-        // let burn_amount = amount as u64 * Self::GENERATE_IMAGE_PRICE;
+        let burn_amount =  Self::GENERATE_IMAGE_PRICE * amount as u64;
 
         approve(
             CpiContext::new(

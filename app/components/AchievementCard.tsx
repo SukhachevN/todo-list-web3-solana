@@ -10,24 +10,26 @@ import {
     Tooltip,
     useToast,
 } from '@chakra-ui/react';
-import { utils, web3 } from '@project-serum/anchor';
+import { web3 } from '@project-serum/anchor';
 import { useWallet } from '@solana/wallet-adapter-react';
 import Image from 'next/image';
 import { FC, useEffect, useState } from 'react';
 import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
 
 import { imgPlaceholder } from '@/utils/constants';
-import { AchievementsMetadataType, StatsState } from '@/utils/types';
+import { AchievementsMetadataType, StatsStateType } from '@/utils/types';
 import {
     getMintAchievementAlert,
     getMintAchievementErrorAlert,
 } from '@/utils/alerts';
+import { getNftMintData } from '@/utils/handlers/getNftMintData';
+import { achievementsSeed, statsSeed } from '@/utils/seeds';
 
 import { useWorkspace } from './WorkspaceProvider';
 
 type AchievementCardType = {
     mint: web3.PublicKey | null;
-    stats: StatsState | null;
+    stats: StatsStateType | null;
 } & Omit<AchievementsMetadataType, 'key'>;
 
 const AchievementCard: FC<AchievementCardType> = ({
@@ -59,41 +61,21 @@ const AchievementCard: FC<AchievementCardType> = ({
         try {
             setIsMinting(true);
 
-            const mintKeypair = web3.Keypair.generate();
-
-            const mint = mintKeypair.publicKey;
-
-            const tokenAddress = await utils.token.associatedAddress({
+            const {
+                mintKeypair,
                 mint,
-                owner: publicKey,
-            });
-
-            const [metadataPda] = web3.PublicKey.findProgramAddressSync(
-                [
-                    Buffer.from('metadata'),
-                    TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-                    mint.toBuffer(),
-                ],
-                TOKEN_METADATA_PROGRAM_ID
-            );
-
-            const [masterEditionPda] = web3.PublicKey.findProgramAddressSync(
-                [
-                    Buffer.from('metadata'),
-                    TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-                    mint.toBuffer(),
-                    Buffer.from('edition'),
-                ],
-                TOKEN_METADATA_PROGRAM_ID
-            );
+                tokenAddress,
+                metadataPda,
+                masterEditionPda,
+            } = await getNftMintData(publicKey);
 
             const [achievementsPda] = web3.PublicKey.findProgramAddressSync(
-                [Buffer.from('achievements'), publicKey.toBuffer()],
+                [achievementsSeed, publicKey.toBuffer()],
                 program.programId
             );
 
             const [statsPda] = web3.PublicKey.findProgramAddressSync(
-                [Buffer.from('stats'), publicKey.toBuffer()],
+                [statsSeed, publicKey.toBuffer()],
                 program.programId
             );
 
@@ -129,7 +111,7 @@ const AchievementCard: FC<AchievementCardType> = ({
     useEffect(() => {
         if (
             mint &&
-            mint.toBase58() != web3.SystemProgram.programId.toBase58()
+            mint.toBase58() !== web3.SystemProgram.programId.toBase58()
         ) {
             setNftMint(mint.toBase58());
         }

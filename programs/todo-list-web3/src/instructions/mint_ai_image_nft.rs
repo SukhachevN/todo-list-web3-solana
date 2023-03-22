@@ -6,9 +6,19 @@ use anchor_spl::{
 };
 
 #[derive(Accounts)]
+#[instruction(title: String, uri: String)]
 pub struct MintAiImageNft<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
+    #[account(
+        mut,
+        seeds=["saved_ai_image".as_bytes().as_ref(), user.key().as_ref()],
+        bump,
+        realloc = 4 + uri.len() + 32 + 8,
+        realloc::payer=user, 
+        realloc::zero= false,
+    )]
+    pub saved_ai_image: Account<'info, SavedAiImageState>,
     #[account(mut)]
     pub todo_token_mint: Account<'info, Mint>,
     /// CHECK: manual check
@@ -41,9 +51,9 @@ pub struct MintAiImageNft<'info> {
 
 impl MintAiImageNft<'_> {
     // for testing
-    const MINT_NFT_PRICE: u64 = 0;
+    // const MINT_NFT_PRICE: u64 = 0;
     // for prod
-    // const MINT_NFT_PRICE: u64 = 50000;
+    const MINT_NFT_PRICE: u64 = 50000;
 
     const AI_IMAGE_NFT_SYMBOL: &'static str = "TODOAIIMG";
 
@@ -96,8 +106,15 @@ impl MintAiImageNft<'_> {
             },
             title,
             Self::AI_IMAGE_NFT_SYMBOL.to_string(),
-            uri,
+            uri.clone(),
         )?;
+
+        let saved_ai_image = &mut ctx.accounts.saved_ai_image;
+
+        
+
+        saved_ai_image.uri = uri;
+        saved_ai_image.mint = ctx.accounts.nft_mint.as_ref().key();
 
         Ok(())
     }

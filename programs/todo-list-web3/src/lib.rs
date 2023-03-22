@@ -8,7 +8,7 @@ use error::*;
 use instructions::*;
 use state::*;
 
-declare_id!("CTAZ3XiKohcVEfDDiCgBkiVLnMHF7zDg9wuLXkP2uDwv");
+declare_id!("FCj8zXq9WD7qb8Bzjyu7ByxzopwsE3HckchKxFAugXwm");
 
 #[program]
 pub mod todo_list_web3 {
@@ -33,10 +33,8 @@ pub mod todo_list_web3 {
         MintAchievementNft::process_instruction(ctx, params)
     }
 
-    pub fn init_ai_image_generator_counter(
-        ctx: Context<InitAiImageGeneratorCounter>,
-    ) -> Result<()> {
-        InitAiImageGeneratorCounter::process_instruction(ctx)
+    pub fn init_ai_image_generator(ctx: Context<InitAiImageGenerator>) -> Result<()> {
+        InitAiImageGenerator::process_instruction(ctx)
     }
 
     pub fn buy_ai_image_generator_try(
@@ -56,5 +54,9 @@ pub mod todo_list_web3 {
         uri: String,
     ) -> Result<()> {
         MintAiImageNft::process_instruction(ctx, title, uri)
+    }
+
+    pub fn save_ai_image(ctx: Context<SaveAiImage>, uri: String) -> Result<()> {
+        SaveAiImage::process_instruction(ctx, uri)
     }
 }

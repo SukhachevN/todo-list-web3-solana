@@ -1,4 +1,3 @@
-import BN from 'bn.js';
 import { TodoType } from './types';
 
 export const formatDateToInput = (date: Date) => {

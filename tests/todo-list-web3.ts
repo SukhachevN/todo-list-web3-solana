@@ -19,9 +19,10 @@ describe('todo-list-web3', async () => {
 
     const todoTitle = 'My first todo';
 
-    const mint = new anchor.web3.PublicKey(
-        '2ZHvZ3r17Gu4GevX6dcY8e3s7JGs6NQKJpJydLU8qf86'
-    );
+    const mint = new anchor.web3.PublicKey(process.env.TOKEN_MINT);
+
+    const aiImageUri =
+        'https://arweave.net/cwOs2avM3c1ZSh-rxi3e4YM1mwDBYmTdtdtw4seKOK4';
 
     const {
         todoPda,
@@ -29,6 +30,7 @@ describe('todo-list-web3', async () => {
         mintAuthorityPda,
         achievementsPda,
         aiImageGeneratorCounterPda,
+        savedAiImagePda,
     } = getPdas(user, program, todoTitle);
 
     const tokenAccount = await getAssociatedTokenAddress(mint, user.publicKey);
@@ -188,10 +190,11 @@ describe('todo-list-web3', async () => {
 
     it('init ai image generator counter', async () => {
         const tx = await program.methods
-            .initAiImageGeneratorCounter()
+            .initAiImageGenerator()
             .accounts({
                 user: user.publicKey,
                 aiImageGeneratorCounter: aiImageGeneratorCounterPda,
+                savedAiImage: savedAiImagePda,
             })
             .signers([user])
             .rpc();
@@ -267,10 +270,22 @@ describe('todo-list-web3', async () => {
         console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
     });
 
-    it('mint ai image nft', async () => {
-        const uri =
-            'https://arweave.net/cwOs2avM3c1ZSh-rxi3e4YM1mwDBYmTdtdtw4seKOK4';
+    it('save ai image', async () => {
+        const tx = await program.methods
+            .saveAiImage(aiImageUri)
+            .accounts({ user: user.publicKey, savedAiImage: savedAiImagePda })
+            .signers([user])
+            .rpc();
 
+        const savedAiImageAccount =
+            await program.account.savedAiImageState.fetch(savedAiImagePda);
+
+        expect(savedAiImageAccount.uri === aiImageUri);
+
+        console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
+    });
+
+    it('mint ai image nft', async () => {
         const title = 'Ai image example';
 
         const {
@@ -282,7 +297,7 @@ describe('todo-list-web3', async () => {
         } = await getNftData(user);
 
         const tx = await program.methods
-            .mintAiImageNft(title, uri)
+            .mintAiImageNft(title, aiImageUri)
             .accounts({
                 masterEdition: masterEditionPda,
                 metadata: metadataPda,
@@ -293,11 +308,17 @@ describe('todo-list-web3', async () => {
                 todoTokenMint: mint,
                 mintAuthority: mintAuthorityPda,
                 todoTokenAccount: tokenAccount,
+                savedAiImage: savedAiImagePda,
             })
             .signers([user, mintKeypair])
             .rpc();
 
-        console.log(nftMint.toBase58());
+        const savedAiImageAccount =
+            await program.account.savedAiImageState.fetch(savedAiImagePda);
+
+        expect(savedAiImageAccount.uri === aiImageUri);
+
+        expect(nftMint.toBase58() === savedAiImageAccount.mint.toBase58());
 
         console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
     });

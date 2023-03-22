@@ -31,11 +31,17 @@ export const getPdas = (
         program.programId
     );
 
+    const [savedAiImagePda] = web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('saved_ai_image'), user.publicKey.toBuffer()],
+        program.programId
+    );
+
     return {
         todoPda,
         statsPda,
         mintAuthorityPda,
         achievementsPda,
         aiImageGeneratorCounterPda,
+        savedAiImagePda,
     };
 };

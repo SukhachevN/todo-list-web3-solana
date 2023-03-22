@@ -2,7 +2,7 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-todo_list_web3 = "CTAZ3XiKohcVEfDDiCgBkiVLnMHF7zDg9wuLXkP2uDwv"
+todo_list_web3 = "CidyNzgAcqdWFeJxZB7v9pPXvbb9Dpcpdfek6EVepLVF"
 
 [registry]
 url = "https://api.apr.dev"

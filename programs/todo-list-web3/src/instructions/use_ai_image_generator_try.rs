@@ -9,7 +9,7 @@ pub struct UseAiImageGeneratorTry<'info> {
         seeds=["ai_image_generator_counter".as_bytes().as_ref(), user.key().as_ref()],
         bump
     )]
-    pub ai_image_generator_counter: Account<'info, AIImageGeneratingCounterState>,
+    pub ai_image_generator_counter: Account<'info, AiImageGeneratingCounterState>,
 }
 
 impl UseAiImageGeneratorTry<'_> {

@@ -13,6 +13,7 @@ import { TodoAccountType, TodoStateType, TodoType } from '../types';
 import { TodoListWeb3 } from '../todo_list_web3';
 import { TOKEN_MINT } from '../constants';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
+import { mintAuthoritySeed, statsSeed } from '../seeds';
 
 export type HandleCreateUpdateTodoArgs = {
     index: number;
@@ -63,7 +64,7 @@ export const handleCreateUpdateTodo = async ({
     );
 
     const [statsPda] = web3.PublicKey.findProgramAddressSync(
-        [Buffer.from('stats'), publicKey.toBuffer()],
+        [statsSeed, publicKey.toBuffer()],
         program.programId
     );
 
@@ -72,7 +73,7 @@ export const handleCreateUpdateTodo = async ({
     const tokenAccount = await getAssociatedTokenAddress(TOKEN_MINT, publicKey);
 
     const [mintAuthorityPda] = web3.PublicKey.findProgramAddressSync(
-        [Buffer.from('mint')],
+        [mintAuthoritySeed],
         program.programId
     );
 
@@ -116,9 +117,7 @@ export const handleCreateUpdateTodo = async ({
                 todo.description = description;
                 todo.deadline = newTodo.deadline;
 
-                if (isCompleted) {
-                    todo.completeDate = new BN(Date.now());
-                }
+                if (isCompleted) todo.completeDate = new BN(Date.now());
 
                 return todos;
             });

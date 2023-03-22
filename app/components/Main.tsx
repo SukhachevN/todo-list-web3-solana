@@ -10,6 +10,7 @@ import {
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useEffect, useState } from 'react';
 import { useImmer } from 'use-immer';
+import { ACCOUNT_DISCRIMINATOR_SIZE } from '@project-serum/anchor';
 
 import { emptyTodoArray } from '@/utils/constants';
 import { CurrentTodoStateType, TodoAccountType } from '@/utils/types';
@@ -27,7 +28,6 @@ const Main = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const [todos, setTodos] = useImmer<TodoAccountType[]>([]);
-
     const [currentTodo, setCurrentTodo] = useState<CurrentTodoStateType>({
         index: 0,
         todo: null,
@@ -49,7 +49,7 @@ const Main = () => {
                     const accounts = await program.account.todoState.all([
                         {
                             memcmp: {
-                                offset: 8,
+                                offset: ACCOUNT_DISCRIMINATOR_SIZE,
                                 bytes: publicKey.toBase58(),
                             },
                         },

@@ -35,9 +35,16 @@ pub struct AchievementsState {
 }
 
 #[account]
-pub struct AIImageGeneratingCounterState {
+pub struct AiImageGeneratingCounterState {
     pub try_count: u32, // 4
 }
+
+#[account]
+pub struct SavedAiImageState {
+    pub uri: String,  // 4 + len()
+    pub mint: Pubkey, // 32
+}
+
 pub const MS_IN_ONE_SECOND: i64 = 1000;
 pub const CREATE_TODO_REWARD: u64 = 5000;
 pub const COMPLETE_TODO_REWARD: u64 = 10000;
