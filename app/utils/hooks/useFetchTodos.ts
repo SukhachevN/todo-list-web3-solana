@@ -3,6 +3,7 @@ import {
     Program,
     web3,
 } from '@project-serum/anchor';
+
 import { useQuery } from 'react-query';
 import { Updater } from 'use-immer';
 
@@ -47,6 +48,7 @@ export const useFetchTodos = ({
         onSuccess: (fetchedTodos) => {
             setTodos(fetchedTodos);
         },
+        refetchOnWindowFocus: false,
         enabled: !!(program && publicKey),
     });
 

@@ -89,7 +89,7 @@ const TodoCard: FC<TodoCardType> = ({ todo, index, setTodos }) => {
     };
 
     return (
-        <Card h="320px" w="400px">
+        <Card h="320px" w="470px">
             {isUpdating ? (
                 <Center h="100%">
                     <Spinner />
