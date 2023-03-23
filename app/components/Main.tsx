@@ -9,12 +9,11 @@ import {
 } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useState } from 'react';
-import { useImmer } from 'use-immer';
 
 import { emptyTodoArray } from '@/utils/constants';
 import { CurrentTodoStateType, TodoAccountType } from '@/utils/types';
 import { getFetchTodosErrorAlert } from '@/utils/alerts';
-import { useFetchTodos } from '@/utils/hooks/useFetchTodos';
+import { useTodos } from '@/utils/hooks/useTodos';
 
 import TodoCard from './TodoCard';
 import TodoModal from './TodoModal';
@@ -27,7 +26,8 @@ const Main = () => {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const [todos, setTodos] = useImmer<TodoAccountType[]>([]);
+    const { todos, setTodos, isLoading, error } = useTodos(program, publicKey);
+
     const [currentTodo, setCurrentTodo] = useState<CurrentTodoStateType>({
         index: 0,
         todo: null,
@@ -39,12 +39,6 @@ const Main = () => {
         onOpen();
         setCurrentTodo({ index: 0, todo: null });
     };
-
-    const { isLoading, error } = useFetchTodos({
-        program,
-        publicKey,
-        setTodos,
-    });
 
     if (error instanceof Error) {
         const { message } = error;

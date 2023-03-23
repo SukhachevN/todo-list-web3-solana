@@ -3,24 +3,18 @@ import {
     Program,
     web3,
 } from '@project-serum/anchor';
-
 import { useQuery } from 'react-query';
-import { Updater } from 'use-immer';
+import { useImmer } from 'use-immer';
 
 import { TodoListWeb3 } from '../todo_list_web3';
 import { TodoAccountType } from '../types';
 
-type UseFetchTodosType = {
-    program?: Program<TodoListWeb3>;
-    publicKey: web3.PublicKey | null;
-    setTodos: Updater<TodoAccountType[]>;
-};
+export const useTodos = (
+    program: Program<TodoListWeb3> | undefined,
+    publicKey: web3.PublicKey | null
+) => {
+    const [todos, setTodos] = useImmer<TodoAccountType[]>([]);
 
-export const useFetchTodos = ({
-    program,
-    publicKey,
-    setTodos,
-}: UseFetchTodosType) => {
     const fetchTodos = async () => {
         if (program && publicKey) {
             const accounts = await program.account.todoState.all([
@@ -52,5 +46,5 @@ export const useFetchTodos = ({
         enabled: !!(program && publicKey),
     });
 
-    return { isLoading, error };
+    return { todos, setTodos, isLoading, error };
 };
