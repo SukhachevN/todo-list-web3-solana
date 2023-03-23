@@ -64,16 +64,20 @@ const Achievements: FC<AchievementsType> = ({ stats }) => {
     }, [publicKey]);
 
     return (
-        <Center h="calc(100% - 200px)" overflow="auto" mb="10px">
+        <>
             {isLoading ? (
-                <Spinner w="100px" h="100px" />
+                <Center h="calc(100% - 200px)">
+                    <Spinner w="100px" h="100px" />
+                </Center>
             ) : (
                 <Flex
                     wrap="wrap"
                     w="100%"
-                    h="100%"
                     gap="20px"
                     justifyContent="center"
+                    h="calc(100% - 200px)"
+                    overflow="auto"
+                    pb="20px"
                 >
                     {achievements?.map((props) => (
                         <AchievementCard
@@ -91,7 +95,7 @@ const Achievements: FC<AchievementsType> = ({ stats }) => {
                     ))}
                 </Flex>
             )}
-        </Center>
+        </>
     );
 };
 
