@@ -1,11 +1,11 @@
 import {
     HStack,
-    SimpleGrid,
     useDisclosure,
     VStack,
     Text,
     Button,
     useToast,
+    Flex,
 } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useEffect, useState } from 'react';
@@ -89,13 +89,14 @@ const Main = () => {
                     setTodos={setTodos}
                 />
             </HStack>
-            <SimpleGrid
-                p="10px"
-                spacing={10}
+            <Flex
+                wrap="wrap"
                 w="100%"
-                overflow="auto"
                 h="100%"
-                minChildWidth="400px"
+                gap="20px"
+                justifyContent="center"
+                overflow="auto"
+                pb="20px"
             >
                 {isLoadingTodos
                     ? emptyTodoArray.map((_, index) => (
@@ -119,7 +120,7 @@ const Main = () => {
                         Here you will see your todos
                     </Text>
                 )}
-            </SimpleGrid>
+            </Flex>
         </VStack>
     );
 };
