@@ -11,7 +11,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useState } from 'react';
 
 import { emptyTodoArray } from '@/utils/constants';
-import { CurrentTodoStateType, TodoAccountType } from '@/utils/types';
+import { CurrentTodoStateType } from '@/utils/types';
 import { getFetchTodosErrorAlert } from '@/utils/alerts';
 import { useTodos } from '@/utils/hooks/useTodos';
 

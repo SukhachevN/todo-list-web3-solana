@@ -84,7 +84,7 @@ const AiImageGenerator = () => {
                         "Nikita man" in your prompt to generate something with
                         me. Leave input empty to generate something absolutely
                         random! Try something like "Illustration of Lenin in
-                        cool hat, 4k, by Leonardo da Vinci, portrait" you your
+                        cool hat, 4k, by Leonardo da Vinci, portrait" use your
                         fantasy!. Image generation can take up to 5 minutes,
                         please dont refresh page before generating end.
                     </Text>
