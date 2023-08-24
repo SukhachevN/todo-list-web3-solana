@@ -3,11 +3,12 @@ import { Program } from '@project-serum/anchor';
 import { getAccount, getAssociatedTokenAddress } from '@solana/spl-token';
 import { expect } from 'chai';
 import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
+
 import { TodoListWeb3 } from '../target/types/todo_list_web3';
-import { airdropSolIfNeeded } from './utils/airdropSolIfNeeded';
-import { getPdas } from './utils/getPdas';
-import { getTodosAccounts } from './utils/getTodosAccounts';
-import { getNftData } from './utils/getNftData';
+import { airdropSolIfNeeded } from './utils/airdrop-sol-if-needed';
+import { getPdas } from './utils/get-pdas';
+import { getTodosAccounts } from './utils/get-todos-accounts';
+import { getNftData } from './utils/get-nft-data';
 
 describe('todo-list-web3', async () => {
     const provider = anchor.AnchorProvider.env();
