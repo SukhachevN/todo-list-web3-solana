@@ -16,7 +16,7 @@ const WalletContextProvider: FC<PropsWithChildren> = ({ children }) => {
 
     return (
         <ConnectionProvider endpoint={url}>
-            <WalletProvider wallets={wallets} autoConnect>
+            <WalletProvider wallets={wallets}>
                 <WalletModalProvider>{children}</WalletModalProvider>
             </WalletProvider>
         </ConnectionProvider>
