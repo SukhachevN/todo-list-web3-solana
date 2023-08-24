@@ -1,6 +1,5 @@
 import * as web3 from '@solana/web3.js';
 import * as token from '@solana/spl-token';
-import { initializeKeypair } from '../initializeKeypair';
 import * as fs from 'fs';
 import {
     bundlrStorage,
@@ -10,6 +9,8 @@ import {
 } from '@metaplex-foundation/js';
 
 import { createCreateMetadataAccountV2Instruction } from '@metaplex-foundation/mpl-token-metadata';
+
+import { initializeKeypair } from '../initializeKeypair';
 
 const TOKEN_NAME = 'TODO';
 const TOKEN_SYMBOL = 'TODO';
