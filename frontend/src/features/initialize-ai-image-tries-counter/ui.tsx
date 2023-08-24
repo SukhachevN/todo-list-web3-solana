@@ -6,7 +6,7 @@ import { useWorkspace } from '@/app/providers/WorkspaceProvider';
 
 import { InitializeCounterType, initializeCounter } from './model';
 
-type InitializeAiImageTriesCounterButton = {
+type InitializeAiImageTriesCounterButtonType = {
     isLoading: boolean;
 } & Omit<
     InitializeCounterType,
@@ -14,7 +14,7 @@ type InitializeAiImageTriesCounterButton = {
 >;
 
 export const InitializeAiImageTriesCounterButton: FC<
-    InitializeAiImageTriesCounterButton
+    InitializeAiImageTriesCounterButtonType
 > = ({ isLoading, ...otherProps }) => {
     const { publicKey } = useWallet();
 
