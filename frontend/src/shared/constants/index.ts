@@ -1,12 +1,12 @@
-import { PublicKey } from '@solana/web3.js';
+import { web3 } from '@project-serum/anchor';
 
 export const emptyTodoArray = new Array(20).fill(0);
 
-export const PROGRAM_ID = new PublicKey(
+export const PROGRAM_ID = new web3.PublicKey(
     process.env.NEXT_PUBLIC_PROGRAM_ID ?? ''
 );
 
-export const TOKEN_MINT = new PublicKey(
+export const TOKEN_MINT = new web3.PublicKey(
     process.env.NEXT_PUBLIC_TOKEN_MINT ?? ''
 );
 

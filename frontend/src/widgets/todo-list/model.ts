@@ -1,12 +1,14 @@
 import { useImmer } from 'use-immer';
-import { PublicKey } from '@solana/web3.js';
 import { ACCOUNT_DISCRIMINATOR_SIZE } from '@project-serum/anchor';
 import { useQuery } from 'react-query';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useWorkspace } from '@/app/providers/WorkspaceProvider';
 import { TodoAccountType } from '@/shared/types';
 
-export const useTodos = (publicKey: PublicKey | null) => {
+export const useTodos = () => {
+    const { publicKey } = useWallet();
+
     const { program } = useWorkspace();
 
     const [todos, setTodos] = useImmer<TodoAccountType[]>([]);

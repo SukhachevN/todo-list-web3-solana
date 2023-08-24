@@ -1,5 +1,4 @@
-import { BN, Program } from '@project-serum/anchor';
-import { Connection, PublicKey, Transaction } from '@solana/web3.js';
+import { BN, Program, web3 } from '@project-serum/anchor';
 import { type WalletAdapterProps } from '@solana/wallet-adapter-base';
 import { CreateToastFnReturn } from '@chakra-ui/react';
 import { Dispatch, SetStateAction } from 'react';
@@ -20,10 +19,10 @@ import { mintAuthoritySeed, statsSeed } from '@/shared/seeds';
 export type HandleCreateUpdateTodoArgs = {
     index: number;
     toast: CreateToastFnReturn;
-    connection?: Connection;
+    connection?: web3.Connection;
     todo: TodoType | null;
     todoState: TodoStateType;
-    publicKey: PublicKey | null;
+    publicKey: web3.PublicKey | null;
     program?: Program<TodoListWeb3>;
     setIsUpdating: (value: boolean) => void;
     sendTransaction: WalletAdapterProps['sendTransaction'];
@@ -60,21 +59,21 @@ export const handleCreateUpdateTodo = async ({
         deadline: new BN(deadlineDate),
     };
 
-    const [todoPda] = PublicKey.findProgramAddressSync(
+    const [todoPda] = web3.PublicKey.findProgramAddressSync(
         [Buffer.from(newTodo.title), publicKey.toBuffer()],
         program.programId
     );
 
-    const [statsPda] = PublicKey.findProgramAddressSync(
+    const [statsPda] = web3.PublicKey.findProgramAddressSync(
         [statsSeed, publicKey.toBuffer()],
         program.programId
     );
 
-    const transaction = new Transaction();
+    const transaction = new web3.Transaction();
 
     const tokenAccount = await getAssociatedTokenAddress(TOKEN_MINT, publicKey);
 
-    const [mintAuthorityPda] = PublicKey.findProgramAddressSync(
+    const [mintAuthorityPda] = web3.PublicKey.findProgramAddressSync(
         [mintAuthoritySeed],
         program.programId
     );

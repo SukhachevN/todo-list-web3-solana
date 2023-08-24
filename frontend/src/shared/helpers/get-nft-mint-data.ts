@@ -1,11 +1,10 @@
-import { Keypair, PublicKey } from '@solana/web3.js';
-import { utils } from '@project-serum/anchor';
+import { utils, web3 } from '@project-serum/anchor';
 import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
 
 import { masterEditionSeed, metadataSeed } from '@/shared/seeds';
 
-export const getNftMintData = async (publicKey: PublicKey) => {
-    const mintKeypair = Keypair.generate();
+export const getNftMintData = async (publicKey: web3.PublicKey) => {
+    const mintKeypair = web3.Keypair.generate();
 
     const mint = mintKeypair.publicKey;
 
@@ -14,12 +13,12 @@ export const getNftMintData = async (publicKey: PublicKey) => {
         owner: publicKey,
     });
 
-    const [metadataPda] = PublicKey.findProgramAddressSync(
+    const [metadataPda] = web3.PublicKey.findProgramAddressSync(
         [metadataSeed, TOKEN_METADATA_PROGRAM_ID.toBuffer(), mint.toBuffer()],
         TOKEN_METADATA_PROGRAM_ID
     );
 
-    const [masterEditionPda] = PublicKey.findProgramAddressSync(
+    const [masterEditionPda] = web3.PublicKey.findProgramAddressSync(
         [
             metadataSeed,
             TOKEN_METADATA_PROGRAM_ID.toBuffer(),

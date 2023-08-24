@@ -1,5 +1,4 @@
-import { Program } from '@project-serum/anchor';
-import { PublicKey } from '@solana/web3.js';
+import { Program, web3 } from '@project-serum/anchor';
 import { CreateToastFnReturn } from '@chakra-ui/react';
 import { Dispatch, SetStateAction } from 'react';
 import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
@@ -15,7 +14,7 @@ import {
 
 type MintNftType = {
     nftMint: string;
-    publicKey: PublicKey | null;
+    publicKey: web3.PublicKey | null;
     program?: Program<TodoListWeb3>;
     mintArg: MintArgType;
     setIsMinting: Dispatch<SetStateAction<boolean>>;
@@ -45,12 +44,12 @@ export const mintNft = async ({
             masterEditionPda,
         } = await getNftMintData(publicKey);
 
-        const [achievementsPda] = PublicKey.findProgramAddressSync(
+        const [achievementsPda] = web3.PublicKey.findProgramAddressSync(
             [achievementsSeed, publicKey.toBuffer()],
             program.programId
         );
 
-        const [statsPda] = PublicKey.findProgramAddressSync(
+        const [statsPda] = web3.PublicKey.findProgramAddressSync(
             [statsSeed, publicKey.toBuffer()],
             program.programId
         );

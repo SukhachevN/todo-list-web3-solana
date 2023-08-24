@@ -7,9 +7,9 @@ import {
     Progress,
     Tooltip,
 } from '@chakra-ui/react';
-import { web3 } from '@project-serum/anchor';
 import Image from 'next/image';
 import { FC } from 'react';
+import { web3 } from '@project-serum/anchor';
 
 import { imgPlaceholder } from '@/shared/constants';
 import { AchievementsMetadataType, StatsStateType } from '@/shared/types';

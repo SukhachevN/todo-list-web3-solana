@@ -1,7 +1,7 @@
-import { Keypair } from '@solana/web3.js';
+import { web3 } from '@project-serum/anchor';
 
 export const mockWallet = {
-    publicKey: Keypair.generate().publicKey,
+    publicKey: web3.Keypair.generate().publicKey,
     signTransaction: () => Promise.reject(),
     signAllTransactions: () => Promise.reject(),
 };

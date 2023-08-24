@@ -1,4 +1,4 @@
-import { PublicKey, SystemProgram } from '@solana/web3.js';
+import { web3 } from '@project-serum/anchor';
 import {
     Account,
     getAccount,
@@ -36,7 +36,7 @@ export const getSavedAiImage = async ({
 }: DefaultFetchAccountArgsType) => {
     let savedAiImage: SavedAiImageType | null = null;
 
-    const [savedAiImagePda] = PublicKey.findProgramAddressSync(
+    const [savedAiImagePda] = web3.PublicKey.findProgramAddressSync(
         [savedAiImageSeed, publicKey.toBuffer()],
         program.programId
     );
@@ -49,7 +49,9 @@ export const getSavedAiImage = async ({
         const stringMint = mint.toBase58();
 
         const realMint =
-            stringMint === SystemProgram.programId.toBase58() ? '' : stringMint;
+            stringMint === web3.SystemProgram.programId.toBase58()
+                ? ''
+                : stringMint;
 
         if (uri) {
             const metadataResponse = await fetch(uri);
@@ -80,7 +82,7 @@ export const getAiImageGeneratorCounter = async ({
 }: DefaultFetchAccountArgsType) => {
     let aiImageGeneratorCounter: AiImageCounterType | null = null;
 
-    const [aiImageGeneratorCounterPda] = PublicKey.findProgramAddressSync(
+    const [aiImageGeneratorCounterPda] = web3.PublicKey.findProgramAddressSync(
         [aiImageGeneratorCounterSeed, publicKey.toBuffer()],
         program.programId
     );
@@ -114,7 +116,7 @@ export const getStats = async ({
 }: DefaultFetchAccountArgsType) => {
     let stats: StatsStateType | null = null;
 
-    const [statsPda] = PublicKey.findProgramAddressSync(
+    const [statsPda] = web3.PublicKey.findProgramAddressSync(
         [statsSeed, publicKey.toBuffer()],
         program.programId
     );
@@ -172,7 +174,7 @@ export const getAchievementsAccount = async ({
 }: DefaultFetchAccountArgsType) => {
     let achievements: AchievementAccountType | null = null;
 
-    const [achievementsPda] = PublicKey.findProgramAddressSync(
+    const [achievementsPda] = web3.PublicKey.findProgramAddressSync(
         [achievementsSeed, publicKey.toBuffer()],
         program.programId
     );

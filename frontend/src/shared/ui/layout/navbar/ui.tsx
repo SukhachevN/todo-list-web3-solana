@@ -2,8 +2,6 @@ import { Flex, Spacer } from '@chakra-ui/react';
 
 import dynamic from 'next/dynamic';
 
-import styles from '@/app/styles/Home.module.css';
-
 const WalletMultiButton = dynamic(
     async () =>
         (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
@@ -24,9 +22,7 @@ const NavBar = () => (
             </ActiveLink>
         </Flex>
         <Spacer />
-        <WalletMultiButton
-            className={styles['wallet-adapter-button-trigger']}
-        />
+        <WalletMultiButton />
     </Flex>
 );
 

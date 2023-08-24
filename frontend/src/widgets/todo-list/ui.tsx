@@ -7,7 +7,6 @@ import {
     useToast,
     Flex,
 } from '@chakra-ui/react';
-import { useWallet } from '@solana/wallet-adapter-react';
 import { useEffect, useState } from 'react';
 
 import { emptyTodoArray } from '@/shared/constants';
@@ -19,11 +18,9 @@ import TodoModal from '@/shared/ui/todo-modal';
 import { useTodos } from './model';
 
 const TodoList = () => {
-    const { publicKey } = useWallet();
-
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const { todos, setTodos, isLoading, error } = useTodos(publicKey);
+    const { todos, setTodos, isLoading, error } = useTodos();
 
     const [currentTodo, setCurrentTodo] = useState<CurrentTodoStateType>({
         index: 0,

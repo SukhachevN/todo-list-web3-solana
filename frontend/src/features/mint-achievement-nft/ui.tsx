@@ -1,6 +1,6 @@
 import { Button, Link, useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { PublicKey, SystemProgram } from '@solana/web3.js';
+import { web3 } from '@project-serum/anchor';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useWorkspace } from '@/app/providers/WorkspaceProvider';
@@ -9,7 +9,7 @@ import { MintArgType } from '@/shared/types';
 import { mintNft } from './model';
 
 type MintAchievementNftButtonType = {
-    mint: PublicKey | null;
+    mint: web3.PublicKey | null;
     mintArg: MintArgType;
 };
 
@@ -39,7 +39,10 @@ const MintAchievementNftButton = ({
     };
 
     useEffect(() => {
-        if (mint && mint.toBase58() !== SystemProgram.programId.toBase58()) {
+        if (
+            mint &&
+            mint.toBase58() !== web3.SystemProgram.programId.toBase58()
+        ) {
             setNftMint(mint.toBase58());
         }
     }, [mint]);

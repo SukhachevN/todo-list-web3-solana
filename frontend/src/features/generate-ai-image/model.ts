@@ -1,7 +1,7 @@
-import { PublicKey } from '@solana/web3.js';
 import { useToast } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { web3 } from '@project-serum/anchor';
 
 import { useWorkspace } from '@/app/providers/WorkspaceProvider';
 import {
@@ -91,7 +91,7 @@ export const useGenerateAiImage = ({
         if (!publicKey || !program || !connection) return;
 
         try {
-            const [counterPda] = PublicKey.findProgramAddressSync(
+            const [counterPda] = web3.PublicKey.findProgramAddressSync(
                 [aiImageGeneratorCounterSeed, publicKey.toBuffer()],
                 program.programId
             );
