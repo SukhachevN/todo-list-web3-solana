@@ -18,7 +18,7 @@ import {
 import { FC, memo, useState } from 'react';
 
 import { TodoCardType } from '@/shared/types';
-import TodoModal from '@/shared/ui/todo-modal';
+import {TodoModal} from '@/shared/ui';
 import UpdateTodoStatusSwitch from '@/features/update-todo-status/ui';
 
 import TodoInfoModal from './todo-info-modal';

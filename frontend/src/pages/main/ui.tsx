@@ -3,7 +3,7 @@ import { NextPage } from 'next/types';
 
 import TodoList from '@/widgets/todo-list';
 import Disconnected from '@/widgets/disconnected';
-import Layout from '@/shared/ui/layout';
+import { Layout } from '@/shared/ui';
 
 const MainPage: NextPage = () => {
     const { connected } = useWallet();

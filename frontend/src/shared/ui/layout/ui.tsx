@@ -1,10 +1,11 @@
 import Head from 'next/head';
 import { Box, Spacer } from '@chakra-ui/react';
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
+import type { PropsWithChildren } from 'react';
 
 import NavBar from './navbar';
 
-const MainLayout: FC<{ children: ReactNode }> = ({ children }) => (
+const MainLayout: FC<PropsWithChildren> = ({ children }) => (
     <Box>
         <Head>
             <title>Todo list web3</title>
