@@ -2,9 +2,12 @@ import { useImmer } from 'use-immer';
 import { ACCOUNT_DISCRIMINATOR_SIZE } from '@project-serum/anchor';
 import { useQuery } from 'react-query';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useToast } from '@chakra-ui/react';
+import { useEffect } from 'react';
 
 import { useWorkspace } from '@/app/providers/WorkspaceProvider';
 import { TodoAccountType } from '@/shared/types';
+import { getFetchTodosErrorAlert } from '@/shared/alerts';
 
 export const useTodos = () => {
     const { publicKey } = useWallet();
@@ -12,6 +15,8 @@ export const useTodos = () => {
     const { program } = useWorkspace();
 
     const [todos, setTodos] = useImmer<TodoAccountType[]>([]);
+
+    const toast = useToast();
 
     const fetchTodos = async () => {
         if (program && publicKey) {
@@ -43,6 +48,14 @@ export const useTodos = () => {
         refetchOnWindowFocus: false,
         enabled: !!(program && publicKey),
     });
+
+    useEffect(() => {
+        if (error instanceof Error) {
+            const { message } = error;
+            const alert = getFetchTodosErrorAlert(message);
+            toast(alert);
+        }
+    }, [error]);
 
     return { todos, setTodos, isLoading, error };
 };
