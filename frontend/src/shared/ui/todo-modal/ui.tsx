@@ -17,26 +17,17 @@ import {
     Text,
     Textarea,
     Tooltip,
-    useToast,
     VStack,
 } from '@chakra-ui/react';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
-import { Updater } from 'use-immer';
+import { FC } from 'react';
 
-import { getDateFromTodo, maxDate, minDate } from '@/shared/date';
-import { handleCreateUpdateTodo } from '@/shared/helpers/handle-create-update-todo';
-import { handleDeleteTodo } from '@/shared/helpers/handle-delete-todo';
-import { TodoAccountType, TodoStateType, TodoType } from '@/shared/types';
-import { useWorkspace } from '@/app/providers/WorkspaceProvider';
+import { maxDate, minDate } from '@/shared/date';
+
+import { useTodoModal, UseTodoModalType } from './model';
 
 type TodoModalType = {
-    todo: TodoType | null;
     isOpen: boolean;
-    onClose: () => void;
-    setTodos: Updater<TodoAccountType[]>;
-    index: number;
-};
+} & UseTodoModalType;
 
 const TodoModal: FC<TodoModalType> = ({
     isOpen,
@@ -45,86 +36,14 @@ const TodoModal: FC<TodoModalType> = ({
     setTodos,
     index,
 }) => {
-    const { publicKey, sendTransaction } = useWallet();
-
-    const { program, connection } = useWorkspace();
-
-    const [isUpdating, setIsUpdating] = useState(false);
-
-    const [todoState, setTodoState] = useState<TodoStateType>({
-        title: todo?.title ?? '',
-        description: todo?.description ?? '',
-        isCompleted: !!todo?.isCompleted,
-        deadline: getDateFromTodo(todo),
-    });
-
-    const toast = useToast();
-
-    const isFormChanged =
-        todoState.title !== todo?.title ||
-        todoState.description !== todo.description ||
-        todoState.isCompleted !== todo?.isCompleted ||
-        todoState.deadline !== getDateFromTodo(todo);
-
-    const onSubmit = async (event: FormEvent) => {
-        event.preventDefault();
-
-        await handleCreateUpdateTodo({
-            index,
-            toast,
-            connection,
-            todo,
-            todoState,
-            program,
-            publicKey,
-            setIsUpdating,
-            sendTransaction,
-            onClose,
-            setTodos,
-        });
-
-        setTodoState({
-            title: '',
-            description: '',
-            isCompleted: false,
-            deadline: '',
-        });
-    };
-
-    const onDelete = () => {
-        handleDeleteTodo({
-            index,
-            toast,
-            connection,
-            todo,
-            program,
-            publicKey,
-            setIsUpdating,
-            sendTransaction,
-            onClose,
-            setTodos,
-        });
-    };
-
-    const onChange = ({
-        target,
-    }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value, checked, type } = target as EventTarget &
-            (HTMLInputElement | HTMLTextAreaElement) & { checked?: boolean };
-
-        const newValue = type === 'checkbox' ? checked : value;
-
-        setTodoState((prev) => ({ ...prev, [name]: newValue }));
-    };
-
-    useEffect(() => {
-        setTodoState({
-            title: todo?.title ?? '',
-            description: todo?.description ?? '',
-            isCompleted: !!todo?.isCompleted,
-            deadline: getDateFromTodo(todo),
-        });
-    }, [todo]);
+    const {
+        isFormChanged,
+        isUpdating,
+        todoState,
+        onChange,
+        onDelete,
+        onSubmit,
+    } = useTodoModal({ todo, setTodos, index, onClose });
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>

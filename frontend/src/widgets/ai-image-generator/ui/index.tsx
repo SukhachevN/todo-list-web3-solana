@@ -37,13 +37,12 @@ const AiImageGenerator = () => {
             ) : (
                 <VStack pt="15px" w="100%" display="flex" spacing="15px">
                     <Text textAlign="center" p="0 10px">
-                        Generate AI image by writing prompt. You can refer me as
-                        "Nikita man" in your prompt to generate something with
-                        me. Leave input empty to generate something absolutely
-                        random! Try something like "Illustration of Lenin in
-                        cool hat, 4k, by Leonardo da Vinci, portrait" use your
-                        fantasy!. Image generation can take up to 5 minutes,
-                        please dont refresh page before generating end.
+                        Generate AI image by writing prompt. Leave input empty
+                        to generate something absolutely random! Try something
+                        like "Illustration of Lenin in cool hat, 4k, by Leonardo
+                        da Vinci, portrait" use your fantasy! Image generation
+                        can take up to 5 minutes, please dont refresh page
+                        before generating end.
                     </Text>
                     <TriesCount
                         tryCount={tryCount}

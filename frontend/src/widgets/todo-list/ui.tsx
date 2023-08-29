@@ -13,7 +13,7 @@ import { emptyTodoArray } from '@/shared/constants';
 import { CurrentTodoStateType } from '@/shared/types';
 import { getFetchTodosErrorAlert } from '@/shared/alerts';
 import TodoCard from '@/entities/todo';
-import TodoModal from '@/shared/ui/todo-modal';
+import { TodoModal } from '@/shared/ui';
 
 import { useTodos } from './model';
 
