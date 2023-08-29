@@ -10,8 +10,8 @@ import {
 import { FC, useState } from 'react';
 
 import { AiImageGeneratorElementType } from '@/shared/types';
-import BuyAiImageGeneratorCounterTriesButton from '@/features/buy-ai-image-generator-try/ui';
-import { InitializeAiImageTriesCounterButton } from '@/features/initialize-ai-image-tries-counter/ui';
+import BuyAiImageGeneratorCounterTriesButton from '@/features/buy-ai-image-generator-try';
+import InitializeAiImageTriesCounterButton from '@/features/initialize-ai-image-tries-counter';
 
 const TriesCount: FC<AiImageGeneratorElementType> = ({
     tryCount,
