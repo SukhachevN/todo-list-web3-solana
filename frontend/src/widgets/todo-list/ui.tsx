@@ -1,58 +1,18 @@
-import {
-    HStack,
-    useDisclosure,
-    VStack,
-    Text,
-    Button,
-    useToast,
-    Flex,
-} from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { HStack, VStack, Text, Flex } from '@chakra-ui/react';
 
 import { emptyTodoArray } from '@/shared/constants';
-import { CurrentTodoStateType } from '@/shared/types';
-import { getFetchTodosErrorAlert } from '@/shared/alerts';
 import TodoCard from '@/entities/todo';
-import { TodoModal } from '@/shared/ui';
+import CreateTodoButton from '@/features/create-todo/ui';
 
 import { useTodos } from './model';
 
 const TodoList = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-
-    const { todos, setTodos, isLoading, error } = useTodos();
-
-    const [currentTodo, setCurrentTodo] = useState<CurrentTodoStateType>({
-        index: 0,
-        todo: null,
-    });
-
-    const toast = useToast();
-
-    const handleCreateTodo = () => {
-        onOpen();
-        setCurrentTodo({ index: 0, todo: null });
-    };
-
-    useEffect(() => {
-        if (error instanceof Error) {
-            const { message } = error;
-            const alert = getFetchTodosErrorAlert(message);
-            toast(alert);
-        }
-    }, [error]);
+    const { todos, setTodos, isLoading } = useTodos();
 
     return (
         <VStack spacing={10} h="100%">
             <HStack alignItems="flex-start" p="20px">
-                <Button onClick={handleCreateTodo}>Create todo</Button>
-                <TodoModal
-                    index={currentTodo.index}
-                    isOpen={isOpen}
-                    onClose={onClose}
-                    todo={currentTodo.todo}
-                    setTodos={setTodos}
-                />
+                <CreateTodoButton setTodos={setTodos} />
             </HStack>
             <Flex
                 wrap="wrap"
